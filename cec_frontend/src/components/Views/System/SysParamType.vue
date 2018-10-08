@@ -1,0 +1,150 @@
+<template>
+  <SimpleTable ref='simpleTable'
+    :tableFilter='tableFilter'
+    :table='table' />
+</template>
+
+<script>
+import utils from '@/mixins/utils'
+import SimpleTable from '@/components/Widgets/SimpleTable'
+
+export default {
+  name: 'SysParamType',
+  mixins: [utils],
+  components: { SimpleTable },
+  data() {
+    return {
+      tableFilter: {
+        formUI: {
+          inline: true,
+          inlineMessage: true,
+          size: 'mini',
+        },
+        items: [
+          {
+            fieldName: 'name',
+            comparison: 'contains',
+            formVisible: true,
+            formItemUI: {
+              label: '名称:',
+            },
+            editorUI: {
+              placeHolder: '名称',
+            },
+          }, {
+            fieldName: 'code',
+            comparison: 'contains',
+            formVisible: true,
+            formItemUI: {
+              label: '编号:',
+            },
+            editorUI: {
+              placeHolder: '编号',
+            },
+          }, {
+            fieldName: 'valid_flag',
+            formVisible: true,
+            editorType: 'ElSelect',
+            editValue: 'Y',
+            selectOptions: [{
+              options: [{
+                value: 'Y',
+                label: '是',
+              }, {
+                value: 'N',
+                label: '否',
+              }]
+            }],
+            formItemUI: {
+              label: '有效标志:',
+            },
+            editorUI: {
+              clearable: true,
+              placeHolder: '有效标志',
+            },
+          },
+        ],
+      },
+      table: {
+        tableName: 'SysParamType',
+        items: [
+          {
+            fieldName: 'pk',
+          }, {
+            fieldName: 'name',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '名称',
+            },
+            formItemUI: {
+              rules: [
+                { required: true, message: '名称不能为空！' },
+                {
+                  validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                  trigger: 'blur',
+                },
+              ],
+            },
+          }, {
+            fieldName: 'code',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '编号',
+            },
+            formItemUI: {
+              rules: [
+                { required: true, message: '编号不能为空！' },
+                {
+                  validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                  trigger: 'blur',
+                },
+              ],
+            },
+          }, {
+            fieldName: 'remark',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '备注',
+            },
+            editorUI: {
+              type: 'textarea',
+            },
+          }, {
+            fieldName: 'sn',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '排序号',
+            },
+          }, {
+            fieldName: 'valid_flag',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '有效标志',
+            },
+            editorType: 'ElSelect',
+            editValue: 'Y',
+            selectOptions: [{
+              options: [{
+                value: 'Y',
+                label: '是',
+              }, {
+                value: 'N',
+                label: '否',
+              }]
+            }],
+          },
+        ],
+      },
+    }
+  },
+  methods: {
+
+  },
+}
+</script>
+

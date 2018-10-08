@@ -1,0 +1,277 @@
+<template>
+  <SimpleTreeTable ref='treeTable'
+    :treeFilter='treeFilter'
+    :tree='tree'
+    :treeUI='tree.treeUI'
+    :tableFilter='tableFilter'
+    :table='table'
+    tableAssoProp='param_type' />
+</template>
+
+<script>
+import * as api_gda from '@/api/gda';
+import * as utils_ui from '@/utils/ui'
+import utils from '@/mixins/utils';
+import SimpleTreeTable from '@/components/Widgets/SimpleTreeTable';
+
+export default {
+  name: 'BizParamValue',
+  mixins: [utils],
+  components: { SimpleTreeTable },
+  data() {
+    return {
+      treeFilter: {
+        formUI: {
+          labelPosition: 'top',
+          size: 'mini',
+        },
+        items: [
+          {
+            fieldName: 'name',
+            comparison: 'contains',
+            formVisible: true,
+            editorUI: {
+              placeHolder: '名称',
+            },
+          }, {
+            fieldName: 'valid_flag',
+            editValue: 'Y',
+          },
+        ]
+      },
+      tree: {
+        // 自定义属性
+        tableName: 'BizParamType',
+        rootVisible: true,
+        rootName: '业务参数类型',
+        displayFieldName: 'name',
+        treeUI: {
+          defaultExpandAll: true,
+        },
+        items: [
+          { fieldName: 'pk' },
+          { fieldName: 'name' },
+        ],
+      },
+      tableFilter: {
+        formUI: {
+          inline: true,
+          inlineMessage: true,
+          size: 'mini',
+        },
+        items: [
+          {
+            fieldName: 'name',
+            comparison: 'contains',
+            formVisible: true,
+            formItemUI: {
+              label: '名称:',
+            },
+            editorUI: {
+              placeHolder: '名称',
+            },
+          }, {
+            fieldName: 'code',
+            comparison: 'contains',
+            formVisible: true,
+            formItemUI: {
+              label: '编号:',
+            },
+            editorUI: {
+              placeHolder: '编号',
+            },
+          }, {
+            fieldName: 'biz_module',
+            formVisible: true,
+            editorType: 'ElSelect',
+            selectOptions: [{ options: [] }],  // created获取
+            formItemUI: {
+              label: '业务模块:',
+            },
+            editorUI: {
+              placeHolder: '业务模块',
+              clearable: true,
+            },
+          }, {
+            fieldName: 'app_module',
+            formVisible: true,
+            editorType: 'ElSelect',
+            selectOptions: [{ options: [] }],  // created获取
+            formItemUI: {
+              label: '所属应用:',
+            },
+            editorUI: {
+              placeHolder: '所属应用',
+              clearable: true,
+            },
+          },
+        ],
+      },
+      // 表信息
+      table: {
+        tableName: 'BizParamValue',
+        parentFieldName: 'param_type',
+        items: [
+          {
+            fieldName: 'pk',
+          }, {
+            fieldName: 'name',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '名称',
+            },
+            formItemUI: {
+              rules: [
+                { required: true, message: '名称不能为空！' },
+                {
+                  validator: (rule, value, callback) => {
+                    this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
+                  },
+                  trigger: 'blur',
+                },
+              ],
+            },
+          }, {
+            fieldName: 'code',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '编号',
+            },
+            formItemUI: {
+              rules: [
+                { required: true, message: '编号不能为空！' },
+                {
+                  validator: (rule, value, callback) => {
+                    this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
+                  },
+                  trigger: 'blur',
+                },
+              ],
+            },
+          }, {
+            fieldName: 'app_module',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '所属应用',
+            },
+            editorType: 'ElSelect',
+            selectOptions: [{ options: [] }],  // created获取,
+          }, {
+            fieldName: 'biz_module',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '业务模块',
+            },
+            editorType: 'ElSelect',
+            selectOptions: [{ options: [] }],  // created获取,
+          }, {
+            fieldName: 'remark',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '备注',
+            },
+            editorUI: {
+              type: 'textarea',
+            },
+          }, {
+            fieldName: 'sn',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '排序号',
+            },
+          }, {
+            fieldName: 'valid_flag',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '有效标志',
+            },
+            editorType: 'ElSelect',
+            editValue: 'Y',
+            selectOptions: [{
+              options: [{
+                value: 'Y',
+                label: '是',
+              }, {
+                value: 'N',
+                label: '否',
+              }]
+            }],
+          },
+        ],
+      },
+    }
+  },
+  created() {
+    this.setDropdown()
+  },
+  methods: {
+    setDropdown() {
+      var listdata = {
+        biz_module: {
+          type: 'SysParamValue',
+          props: ['pk', 'code', 'name', 'param_type'],
+          filters: [
+            {
+              prop: 'param_type__code',       // 外键+__+字段
+              value: 'biz_module',            // 业务模块
+              comparison: 'exact',
+            }, {// 使用标志
+              prop: 'valid_flag',
+              value: 'Y',
+              comparison: 'exact',
+            },]
+        },
+        app_module: {
+          type: 'AppInstance',
+          props: ['pk', 'code', 'name'],
+          filters: [
+            { // 使用标志
+              prop: 'valid_flag',
+              value: 'Y',
+              comparison: 'exact',
+            },]
+        },
+      }
+
+      api_gda.multilistData(listdata).then((responseData) => {
+        //// 过滤条件
+        // 业务模块下拉
+        var filterBizModule = this.tableFilter.items.find(item => { return item.fieldName === 'biz_module' })
+        if (filterBizModule) {
+          this._setDropdown(responseData['biz_module'], filterBizModule.selectOptions[0].options)
+        }
+        // 应用模块下拉
+        var filterAppModule = this.tableFilter.items.find(item => { return item.fieldName === 'app_module' })
+        if (filterAppModule) {
+          this._setDropdown(responseData['app_module'], filterAppModule.selectOptions[0].options)
+        }
+
+        //// 表列
+        // 业务模块下拉
+        var tableBizModule = this.table.items.find(item => { return item.fieldName === 'biz_module' })
+        if (tableBizModule) {
+          this._setDropdown(responseData['biz_module'], tableBizModule.selectOptions[0].options)
+        }
+        // 应用模块下拉
+        var tableAppModule = this.table.items.find(item => { return item.fieldName === 'app_module' })
+        if (tableAppModule) {
+          this._setDropdown(responseData['app_module'], tableAppModule.selectOptions[0].options)
+        }
+
+      }).catch((error) => {
+        // 设置界面
+        utils_ui.showErrorMessage(error)
+      })
+    },
+  },
+}
+</script>
+
+

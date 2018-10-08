@@ -1,0 +1,52 @@
+一、python后台常用命令
+
+1、创建project命令：
+	django-admin startproject %1
+
+2、创建app命令：
+	django-admin startapp %1
+
+3、同步数据库	
+	#当你在models.py中新增了类时，运行它就可以自动在数据库中创建表了，不用手动创建。
+	python3 cec_backend/manage.py makemigrations gda system permission  ###加模块名
+	python3 cec_backend/manage.py migrate
+	
+	#清空数据库
+	#django-admin flush
+
+	#从已有库导入model
+	#django-admin inspectdb
+
+4、创建超级管理员
+	python3 cec_backend/manage.py createsuperuser	
+	
+
+
+5、为数据库中已有的用户生成token
+import os,django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cec_backend.settings")# project_name 项目名称
+django.setup()
+
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+for user in User.objects.all():
+	Token.objects.get_or_create(user=user)
+	
+6、生成所有静态文件
+	python3 cec_backend/manage.py collectstatic
+
+7、运行服务
+	python3 manage.py runserver 0.0.0.0:8000
+
+
+二、vue常用命令
+
+1、生成工程
+	vue init webpack frontend
+	
+2、生成工程后执行安装编译操作
+	cd frontend
+    npm install
+    npm run build
+    npm run dev

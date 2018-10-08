@@ -1,0 +1,50 @@
+1.
+	npm install --save-dev vue-styleguidist
+
+2.
+    将这些脚本添加到您的package.json：
+
+	{
+	  	"script": {
+			"styleguide": "vue-styleguidist server",
+			"styleguide:build": "vue-styleguidist build"
+	  	}
+	}
+
+3.
+ （1）在项目的根文件夹中创建styleguide.config.js
+	module.exports = {
+  		components: 'src/components/**/[A-Z]*.vue'，              //加载components目录下全部文件
+
+		webpackConfig: require('./build/webpack.base.conf.js')	// Vue styleguidist使用webpack底层，它需要知道如何加载您的项目的文件											Webpack需要运行Vue styleguidist，但是你的项目不需要使用它。
+	};
+或者
+	module.exports = {
+  		sections: [{
+			name: 'Button',
+			components: 'src/components/Button/*.vue',	//分别加载
+			content: 'docs/Button.md',
+		}],
+		webpackConfig: require('./build/webpack.base.conf.js')
+		};
+ 
+
+4（选）.
+    可以创建通用组件例子，在风格指南中显示
+
+	<script>
+		/**
+		*  @example ../../../docs/examples/Button.md
+		*/
+		export default {
+		}
+	</script>
+
+    注意：组件中要有name属性，不写会出警告
+
+
+5.
+	运行npm run styleguide开始样式指南dev服务器。
+
+	运行npm run styleguide:build构建一个静态版本。
+
