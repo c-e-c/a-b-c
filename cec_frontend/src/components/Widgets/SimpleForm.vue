@@ -73,9 +73,6 @@ export default {
      * 
       {
         // 表单内el-form表单对象
-        formUI:{
-          // el-form的属性，参见element-ui组件
-        },
         items:[
           {
             // 1、自定义部分

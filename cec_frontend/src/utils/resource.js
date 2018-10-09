@@ -7,7 +7,7 @@
 //     fieldName: 'xxx',      // （树）父节点属性，xxx为父节点的uri
 //     editValue: '',         // （树）父节点值，
 //   }
-//   childrenObj: [xxx,],     // （树）树子节点，xxx为子节点对象
+//   childrenObj: [{xxx},],     // （树）树子节点，xxx为子节点对象
 //   disabled: false,         // （树）树节点是否被禁用，true为禁用
 //   props: [
 //		{
