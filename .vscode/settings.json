@@ -1,0 +1,47 @@
+{
+  "vetur.validation.template": false,
+  "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatter.ts": "vscode-typescript",
+  "vetur.format.defaultFormatter.html": "js-beautify-html",
+  "vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+      // 属性强制折行对齐
+      // [auto|force|force-aligned|force-expand-multiline]
+      "wrap_attributes": "force"
+      //"wrap_line_length": 80
+    }
+  },
+
+  // 结尾没有分号
+  "prettier.semi": false,
+  // 强制单引号
+  "prettier.singleQuote": true,
+  // 尽可能控制尾随逗号的打印
+  "prettier.trailingComma": "all",
+  // 开启 eslint 支持
+  "prettier.eslintIntegration": true,
+
+  // // 保存时自动fix
+  // "eslint.autoFixOnSave": true,
+  // // 添加 vue 支持
+  // "eslint.validate": [
+  //   "javascript",
+  //   "javascriptreact",
+  //   {
+  //     "language": "vue",
+  //     "autoFix": true
+  //   }
+  // ],
+
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.formatOnSave": true,
+
+  "python.pythonPath": "/usr/local/bin/python3",
+  "python.linting.pylintEnabled": false,
+  "python.formatting.provider": "black",
+
+  "workbench.iconTheme": "vscode-icons",
+  "element-helper.version": "2.3"
+}
