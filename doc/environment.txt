@@ -9,6 +9,7 @@
 	npm install webpack -g
 	npm install vue -g
 	npm install vue-cli -g
+	npm install -g npm-check-updates
 
 	npm install node-sass sass-loader css-loader axios lodash element-ui nprogress js-cookie vuex normalize.css
 	
