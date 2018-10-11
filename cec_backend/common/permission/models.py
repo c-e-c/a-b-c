@@ -74,6 +74,10 @@ class Role(GeneralBaseModel):
         角色
     """
 
+    """
+     group:  id | name 
+    """
+
     group = models.OneToOneField(Group, on_delete=models.CASCADE)
     # 外键关联system模块SysParamValue表
     role_type = models.IntegerField(blank=True, null=True, verbose_name="角色类型")
@@ -87,10 +91,14 @@ class ControlObject(GeneralBaseModel):
         控制对象
     """
 
+    code = models.CharField(max_length=256, unique=True, verbose_name="编号")
+    name = models.CharField(max_length=256, unique=True, verbose_name="名称")
+
     # 外键关联system模块SysParamValue表
     control_object_type = models.IntegerField(
         blank=True, null=True, verbose_name="控制对象类型"
     )
+
     parent = models.ForeignKey(
         "self",
         on_delete=models.SET_NULL,
@@ -108,6 +116,9 @@ class ControlPolicy(GeneralBaseModel):
         控制策略
     """
 
+    """
+     permission:  id | content_type_id | codename | name 
+    """
     permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
     # 外键关联system模块SysParamValue表
     control_policy_type = models.IntegerField(
