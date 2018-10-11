@@ -93,7 +93,7 @@ export default {
               clearable: true,
             },
           }, {
-            fieldName: 'app_module',
+            fieldName: 'app_instance',
             formVisible: true,
             editorType: 'ElSelect',
             selectOptions: [{ options: [] }],  // created获取
@@ -151,7 +151,7 @@ export default {
               ],
             },
           }, {
-            fieldName: 'app_module',
+            fieldName: 'app_instance',
             columnVisible: true,
             editable: true,
             columnUI: {
@@ -228,7 +228,7 @@ export default {
               comparison: 'exact',
             },]
         },
-        app_module: {
+        app_instance: {
           type: 'AppInstance',
           props: ['pk', 'code', 'name'],
           filters: [
@@ -247,10 +247,10 @@ export default {
         if (filterBizModule) {
           this._setDropdown(responseData['biz_module'], filterBizModule.selectOptions[0].options)
         }
-        // 应用模块下拉
-        var filterAppModule = this.tableFilter.items.find(item => { return item.fieldName === 'app_module' })
+        // 所属应用下拉
+        var filterAppModule = this.tableFilter.items.find(item => { return item.fieldName === 'app_instance' })
         if (filterAppModule) {
-          this._setDropdown(responseData['app_module'], filterAppModule.selectOptions[0].options)
+          this._setDropdown(responseData['app_instance'], filterAppModule.selectOptions[0].options)
         }
 
         //// 表列
@@ -260,9 +260,9 @@ export default {
           this._setDropdown(responseData['biz_module'], tableBizModule.selectOptions[0].options)
         }
         // 应用模块下拉
-        var tableAppModule = this.table.items.find(item => { return item.fieldName === 'app_module' })
+        var tableAppModule = this.table.items.find(item => { return item.fieldName === 'app_instance' })
         if (tableAppModule) {
-          this._setDropdown(responseData['app_module'], tableAppModule.selectOptions[0].options)
+          this._setDropdown(responseData['app_instance'], tableAppModule.selectOptions[0].options)
         }
 
       }).catch((error) => {
