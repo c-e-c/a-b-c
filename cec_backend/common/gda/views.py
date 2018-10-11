@@ -331,7 +331,7 @@ class CommonListModelMixin(mixins.ListModelMixin):
         if page is not None:
             return self.get_paginated_response(page)
         else:
-            return CommonResponse(page)
+            return CommonResponse(self.queryset)
         pass
 
 
