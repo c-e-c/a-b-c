@@ -191,7 +191,7 @@ export default {
             SimpleForm控件的form.items属性中的对象内容，参见SimpleForm.form.items[x]对象
 
             // 4、 可选 孩子
-            columnChildren:[{}],
+            children:[{}],
           },{
             ...
         }],
