@@ -183,12 +183,15 @@ export default {
             columnUI: {
               // 参见element-ui组件el-table-column的属性
             },
-            // 2、自定义部分      
+            // 2、可选 自定义部分      
             editable: false,   // 列是否可编辑，默认为不可编辑
             columnVisible:false,  // 列可显示
 
-            // 3、表单内表单项内容
+            // 3、可选 表单内表单项内容
             SimpleForm控件的form.items属性中的对象内容，参见SimpleForm.form.items[x]对象
+
+            // 4、 可选 孩子
+            columnChildren:[{}],
           },{
             ...
         }],

@@ -80,12 +80,15 @@ export default {
             comparison: 'xxx'       // 可选，默认为exact，操作符，具体参照django的Fields的lookup分词
             formVisible: false,         // 可选，默认为不显示，列是否可展示  
 
-            // 2、表单内表单项对象
+            // 2、可选 表单内表单项对象
             formItemUI: {
               // el-form-item的属性，参见element-ui组件
             },
-            // 3、表单内表单项控件对象
+            // 3、可选 表单内表单项控件对象
             DynamicEditor控件的editorInfo的多个属性内容，参见DynamicEditor.editorInfo
+
+            // 4、 可选 孩子
+            formChildren:[{}],
           },{
             ...
         }],
