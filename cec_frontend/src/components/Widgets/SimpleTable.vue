@@ -74,10 +74,10 @@
             <template :slot="'props.'+index+'.editValue'"
               slot-scope='{ row, column, $index }'>
               <template v-if='row.props && row.props[index]'>
-                <template v-if='item.formItemUI && row.props[index].editing'>
+                <template v-if='row.props[index].editing'>
                   <el-form-item :prop="'rows.'+$index+'.props.'+index+'.editValue'"
                     label=''
-                    :rules='item.formItemUI.rules'
+                    :rules="item.formItemUI?item.formItemUI.rules:[]"
                     size='mini'>
                     <DynamicEditor :editorUI='item.editorUI'
                       :editorInfo='item'
