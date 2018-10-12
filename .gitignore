@@ -3,3 +3,4 @@
 */migrations/*
 */common/*/migrations/*
 .vscode/*
+cec_mobile/*
