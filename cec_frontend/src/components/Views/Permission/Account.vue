@@ -12,7 +12,6 @@
       </template>
     </SimpleTable>
     <AccountDetail v-else
-      :formUI='formUI'
       :collapse='collapse'
       @detailReturn='()=>isList=true'>
     </AccountDetail>
@@ -150,7 +149,7 @@ export default {
               }, {//head_img
                 fieldName: 'head_img',
                 formVisible: true,
-                editable: true,
+                //editable: true,
                 formItemUI: {
                   label: '头像',
                 },
@@ -414,12 +413,12 @@ export default {
           },
         ],
       },
-      formUI: {
-        //inline: true,
-        labelWidth: '100px',
-        //showMessage: true,
-        // inlineMessage: true,
-      },
+      // formUI: {
+      //   //inline: true,
+      //   labelWidth: '100px',
+      //   //showMessage: true,
+      //   // inlineMessage: true,
+      // },
     }
   },
   methods: {

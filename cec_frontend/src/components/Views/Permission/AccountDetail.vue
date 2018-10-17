@@ -4,8 +4,7 @@
 		 type="primary">保存</el-button>
 		<el-button @click="handleClick()"
 		 size="small">返回</el-button>
-		<SimpleCollapse :formUI='formUI'
-		 :collapse='collapse'>
+		<SimpleCollapse :collapse='collapse'>
 			<template v-for='(item, index) in collapse.items'>
 				<template v-for='(it, ind) in item.children'>
 					<el-transfer :slot="index+'.'+ind"
@@ -27,10 +26,6 @@ export default {
 	//mixins: [utils],
 	components: { SimpleForm, SimpleCollapse },
 	props: {
-		formUI: {
-			type: Object,
-			default: function () { return {} },
-		},
 		collapse: {
 			type: Object,
 			required: true,
@@ -38,6 +33,7 @@ export default {
 	},
 	data() {
 		return {
+
 		}
 	},
 	methods: {
