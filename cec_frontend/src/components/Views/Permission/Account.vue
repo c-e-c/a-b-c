@@ -1,20 +1,22 @@
 <template>
-  <SimpleTable v-if='isList'
-    ref='simpleTable'
-    :tableFilter='tableFilter'
-    :table='table'>
-    <template slot='operating_column'
-      slot-scope='{ row, column, $index }'>
-      <el-button @click="handleClick(row)"
-        type='text'
-        size="mini">查看</el-button>
-    </template>
-  </SimpleTable>
-  <AccountDetail v-else
-    :formUI='formUI'
-    :form='table'
-    @detailReturn='()=>isList=true'>
-  </AccountDetail>
+  <div>
+    <SimpleTable v-if='isList'
+      ref='simpleTable'
+      :tableFilter='tableFilter'
+      :table='table'>
+      <template slot='operating_column'
+        slot-scope='{ row, column, $index }'>
+        <el-button @click="handleClick(row)"
+          type='text'
+          size="mini">查看</el-button>
+      </template>
+    </SimpleTable>
+    <AccountDetail v-else
+      :formUI='formUI'
+      :collapse='collapse'
+      @detailReturn='()=>isList=true'>
+    </AccountDetail>
+  </div>
 </template>
 
 <script>
@@ -26,6 +28,17 @@ export default {
   //mixins: [utils],
   components: { SimpleTable, AccountDetail },
   data() {
+    const generateData = _ => {
+      const data = [];
+      for (let i = 1; i <= 15; i++) {
+        data.push({
+          key: i,
+          label: `备选项 ${i}`,
+          disabled: i % 4 === 0
+        });
+      }
+      return data;
+    };
     return {
       isList: true,
       tableFilter: {
@@ -68,6 +81,84 @@ export default {
             },
           },
         ],
+      },
+      collapse: {
+        collapseUI: {
+          activeNames: ['1', '2', '3'],
+        },
+        items: [
+          {
+            collapseItemUI: {
+              title: "账号信息",
+              name: "1",
+            },
+            children: [
+              {//user__username
+                fieldName: 'user__username',
+                formVisible: true,
+                editable: true,
+                formItemUI: {
+                  label: '账号',
+                  // rules: [
+                  //   { required: true, message: '账号不能为空！' },
+                  // ],
+                },
+              }, {//account_type
+                fieldName: 'account_type',
+                formVisible: true,
+                editable: true,
+                formItemUI: {
+                  label: '账号类型',
+                },
+              },
+            ],
+          }, {
+            collapseItemUI: {
+              title: "用户信息",
+              name: "2",
+            },
+            children: [
+              {//party
+                fieldName: 'party',
+                formVisible: true,
+                editable: true,
+                formItemUI: {
+                  label: '当事人ID',
+                },
+              }, {//head_img
+                fieldName: 'head_img',
+                formVisible: true,
+                editable: true,
+                formItemUI: {
+                  label: '头像',
+                },
+              },
+            ],
+          }, {
+            collapseItemUI: {
+              title: "权限信息",
+              name: "3",
+            },
+            children: [
+              {//party
+                customType: true,
+                data: generateData(),
+                value1: [1, 4],
+                fieldName: 'party',
+                formVisible: true,
+                editable: true,
+              }, {//head_img
+                fieldName: 'head_img',
+                formVisible: true,
+                editable: true,
+                formItemUI: {
+                  label: '头像',
+                },
+              },
+            ],
+          },
+
+        ]
       },
       table: {
         tableName: 'Account',
@@ -324,7 +415,7 @@ export default {
         ],
       },
       formUI: {
-        inline: true,
+        //inline: true,
         labelWidth: '100px',
         //showMessage: true,
         // inlineMessage: true,

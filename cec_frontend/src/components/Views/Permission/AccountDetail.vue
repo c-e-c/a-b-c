@@ -1,115 +1,96 @@
 <template>
-	<div class="form">
+	<div>
 		<el-button @click="handleClick()"
 		 type="primary">保存</el-button>
 		<el-button @click="handleClick()"
 		 size="small">返回</el-button>
 		<!-- <SimpleForm :formUI='formUI'
 		 :form='form' /> -->
-		<div class="el-form_header">
-			账号信息
-		</div>
-		<el-form :model="form1"
+		<!-- <el-form :model="form1"
 		 label-position="top"
 		 class="form">
-			<el-form-item label="账号">
-				<el-input v-model="form1.user__username"
-				 class="input"></el-input>
-			</el-form-item>
-			<el-form-item label="账号类型">
-				<el-input v-model="form1.account_type"
-				 class="input"></el-input>
-			</el-form-item>
-			<div class="el-form_header">
-				用户信息
-			</div>
-			<el-form-item label="当事人ID">
-				<el-input v-model="form1.party"
-				 class="input"></el-input>
-			</el-form-item>
-			<el-form-item label="姓名">
-				<el-input v-model="form1.head_img"
-				 class="input"></el-input>
-			</el-form-item>
-		</el-form>
-		<div class="el-form_header">
-			权限
-		</div>
-		<div>
-			<el-transfer v-model="value1"
-			 class="transfer"
-			 :button-texts="['到左边', '到右边']"
-			 :titles="['用户组', 'Target']"
-			 :data="data1"></el-transfer>
-		</div>
-		<el-transfer class="transfer"
-		 v-model="value2"
-		 :button-texts="['到左边', '到右边']"
-		 :titles="['菜单', 'Target']"
-		 :data="data2"></el-transfer>
-
+			<el-collapse v-model="activeNames"
+			 @change="handleChange">
+				<el-collapse-item title="一致性 Consistency"
+				 name="1">
+					<div class="el-form_header">
+						账号信息
+					</div>
+					<el-form-item label="账号">
+						<el-input class="input"></el-input>
+					</el-form-item>
+					<el-form-item label="账号类型">
+						<el-input v-model="form1.account_type"
+						 class="input"></el-input>
+					</el-form-item>
+				</el-collapse-item>
+				<el-collapse-item title="Consistency"
+				 name="2">
+					<div class="el-form_header">
+						用户信息
+					</div>
+					<el-form-item label="当事人ID">
+						<el-input v-model="form1.party"
+						 class="input"></el-input>
+					</el-form-item>
+					<el-form-item label="姓名">
+						<el-input v-model="form1.head_img"
+						 class="input"></el-input>
+					</el-form-item>
+				</el-collapse-item>
+				<div>
+					<div class="el-form_header">
+						权限
+					</div>
+					<el-form-item label="">
+						<el-transfer v-model="value1"
+						 class="transfer"
+						 :button-texts="['到左边', '到右边']"
+						 :titles="['用户组', 'Target']"
+						 :data="data1"></el-transfer>
+						<el-transfer class="transfer"
+						 v-model="value2"
+						 :button-texts="['到左边', '到右边']"
+						 :titles="['菜单', 'Target']"
+						 :data="data2"></el-transfer>
+					</el-form-item>
+				</div>
+			</el-collapse>
+		</el-form> -->
+		<SimpleCollapse :formUI='formUI'
+		 :collapse='collapse'>
+			<template v-for='(item, index) in collapse.items'>
+				<template v-for='(it, ind) in item.children'>
+					<el-transfer :slot="index+'.'+ind"
+					 v-model="it.value1"
+					 :data="it.data"></el-transfer>
+				</template>
+			</template>
+		</SimpleCollapse>
 	</div>
 </template>
 
 <script>
 //import utils from '@/mixins/utils'
 import SimpleForm from '@/components/Widgets/SimpleForm'
+import SimpleCollapse from '@/components/Widgets/SimpleCollapse'
 
 export default {
 	name: 'AccountDetail',
 	//mixins: [utils],
-	components: { SimpleForm },
+	components: { SimpleForm, SimpleCollapse },
 	props: {
 		formUI: {
 			type: Object,
 			default: function () { return {} },
 		},
-		form: {
+		collapse: {
 			type: Object,
 			required: true,
 		},
 	},
 	data() {
 		return {
-			data1: [
-				{
-					key: 1,
-					label: `运营方`,
-				}, {
-					key: 2,
-					label: `买方`,
-				}, {
-					key: 3,
-					label: `卖方`,
-				}, {
-					key: 4,
-					label: `鉴定机构`,
-				}
-			],
-			data2: [
-				{
-					key: 1,
-					label: `艺术品列表`,
-				}, {
-					key: 2,
-					label: `艺术品发布`,
-				}, {
-					key: 3,
-					label: `鉴定审核`,
-				}, {
-					key: 4,
-					label: `订单列表`,
-				}
-			],
-			value1: [1],
-			value2: [],
-			labelPosition: 'top',
-			form1: {
-				user__username: '',
-				account_type: '',
-				party: '',
-				head_img: ''
-			}
 		}
 	},
 	methods: {
