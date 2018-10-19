@@ -141,12 +141,16 @@ export default {
             children: [
               {//party
                 customType: true,
-                data: generateData(),
-                value1: [1, 4],
+                customUI: {
+                  componentName: "collapse1",
+                  data: generateData(),
+                  value1: [1, 4],
+                },
                 fieldName: 'party',
                 formVisible: true,
                 editable: true,
               }, {//head_img
+                customUI: {},
                 fieldName: 'head_img',
                 formVisible: true,
                 //editable: true,

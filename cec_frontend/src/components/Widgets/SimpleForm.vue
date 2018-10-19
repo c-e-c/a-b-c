@@ -9,19 +9,41 @@
     :show-message='formUI.showMessage'
     :inline-message='formUI.inlineMessage'
     :status-icon='formUI.statusIcon'
-    :size='formUI.size'>
-    <template v-for='(item, index) in form.items'>
-      <simple-form-item v-if='item.formVisible'
-        :key='index'
-        :prop="'props.'+index+'.editValue'"
-        :formItemUI='item.formItemUI'>
-        <DynamicEditor :slot="'props.'+index+'.editValue'"
-          :editorUI='item.editorUI'
-          :editorInfo='item'
-          :editorModel='formData.props[index]'
-          @modelChanged='(val)=>{__handleFormDataModified(val, index)}' />
-      </simple-form-item>
-      <!-- <el-form-item :key='item.uri'
+    :size='formUI.size'
+    :class="{centerForm: form.divType}">
+    <template v-if='form.divType'>
+      <template v-for='(item, itemIndex) in form.items'>
+        <!-- <div v-if="item.children && JSON.stringify(item.children) !='[]'"> -->
+
+        <div class="el-form_header">
+          {{item.titleName}}
+        </div>
+        <div>
+          <template v-for='(child, childIndex) in item.children'>
+            <simple-form-item v-if='child.formVisible'
+              :key='childIndex'
+              :prop="'props.'+itemIndex+'.'+childIndex+'.editValue'"
+              :formItemUI='child.formItemUI'>
+              <template v-if="child.customType != null || child.customType"
+                :slot="'props.'+itemIndex+'.'+childIndex+'.editValue'">
+                <slot :name="child.customUI.componentName"></slot>
+              </template>
+              <DynamicEditor v-else
+                class="dynamicEditor"
+                :slot="'props.'+itemIndex+'.'+childIndex+'.editValue'"
+                :editorUI='child.editorUI'
+                :editorInfo='child'
+                :editorModel='formData.props[itemIndex][childIndex]'
+                @modelChanged='(val)=>{__handleFormDataModified(val, childIndex)}' />
+            </simple-form-item>
+          </template>
+        </div>
+
+      </template>
+    </template>
+    <!-- </div> -->
+
+    <!-- <el-form-item :key='item.uri'
         :prop="
           'props.'+index+
           '.editValue'
@@ -38,6 +60,18 @@
           :editorInfo='item'
           v-model='formData.props[index]' />
       </el-form-item> -->
+    <template v-else
+      v-for='(item, index) in form.items'>
+      <simple-form-item v-if='item.formVisible'
+        :key='index'
+        :prop="'props.'+index+'.editValue'"
+        :formItemUI='item.formItemUI'>
+        <DynamicEditor :slot="'props.'+index+'.editValue'"
+          :editorUI='item.editorUI'
+          :editorInfo='item'
+          :editorModel='formData.props[index]'
+          @modelChanged='(val)=>{__handleFormDataModified(val, index)}' />
+      </simple-form-item>
     </template>
   </el-form>
 </template>
@@ -100,7 +134,17 @@ export default {
     },
   },
   data: function () {
-    var tempFormData = utils_resource.generateProperties(this.form.items)
+    //        var tempFormData = utils_resource.generateProperties(this.form.items)
+    if (this.form.divType) {
+      var tempFormData = []
+      this.form.items.forEach(element => {
+        if (element.children && JSON.stringify(element.children) != '[]') {
+          tempFormData.push(utils_resource.generateProperties(element.children))
+        }
+      })
+    } else {
+      var tempFormData = utils_resource.generateProperties(this.form.items)
+    }
 
     return {
       /**
@@ -173,3 +217,23 @@ export default {
 
 }
 </script>
+<style scoped>
+.el-form_header {
+  height: 48px;
+  line-height: 48px;
+  background-color: #fff;
+  color: #303133;
+  cursor: pointer;
+  border-bottom: 1px solid #abb2c7;
+  outline: none;
+  margin-bottom: 10px;
+}
+.centerForm {
+  margin: 0 auto;
+  width: 35%;
+}
+.dynamicEditor {
+  width: 100%;
+  padding: 0px;
+}
+</style>

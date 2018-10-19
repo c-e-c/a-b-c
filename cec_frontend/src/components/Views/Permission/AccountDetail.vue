@@ -4,15 +4,17 @@
 		 type="primary">保存</el-button>
 		<el-button @click="handleClick()"
 		 size="small">返回</el-button>
-		<SimpleCollapse :collapse='collapse'>
-			<template v-for='(item, index) in collapse.items'>
-				<template v-for='(it, ind) in item.children'>
-					<el-transfer :slot="index+'.'+ind"
-					 v-model="it.value1"
-					 :data="it.data"></el-transfer>
-				</template>
-			</template>
-		</SimpleCollapse>
+
+		<SimpleForm :form='form'>
+			<!-- <template v-for='(item, index) in collapse.items'>
+        <template v-for='(child, ind) in item.children'>
+          <el-transfer v-if="child.customType"
+            :slot="child.customUI.componentName"
+            v-model="child.customUI.value1"
+            :data="child.customUI.data"></el-transfer>
+        </template>
+      </template> -->
+		</SimpleForm>
 	</div>
 </template>
 
@@ -33,6 +35,59 @@ export default {
 	},
 	data() {
 		return {
+			/**
+			 *测试数据 
+			 *  */
+			form: {
+				divType: true,
+				items: [
+					{
+						titleName: "账号信息",
+						children: [
+							{
+								fieldName: 'user__username',
+								titleName: "账号信息",
+								formVisible: true,
+								formItemUI: {
+									label: '账号:',
+								},
+								editorUI: {
+									placeHolder: '账号',
+								},
+							}, {//account_type
+								fieldName: 'account_type',
+								formVisible: true,
+								editable: true,
+								formItemUI: {
+									label: '账号类型',
+								},
+								editorUI: {
+									placeHolder: '账号类型',
+								},
+							},
+						]
+					}, {
+						titleName: "用户信息",
+						children: [
+							{//party
+								fieldName: 'party',
+								formVisible: true,
+								editable: true,
+								formItemUI: {
+									label: '当事人ID',
+								},
+							}, {//head_img
+								fieldName: 'head_img',
+								formVisible: true,
+								editable: true,
+								formItemUI: {
+									label: '头像',
+								},
+							},
+						]
+					},
+				]
+			}
 
 		}
 	},
