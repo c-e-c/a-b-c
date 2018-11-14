@@ -1,19 +1,33 @@
 <template>
-  <SimpleTable ref='simpleTable'
+  <SimpleTable v-if='isList'
+    ref='simpleTable'
     :tableFilter='tableFilter'
-    :table='table' />
+    :table='table'>
+    <template slot='operating_column'
+      slot-scope='{ row, column, $index }'>
+      <el-button @click="handleClick(row)"
+        type='text'
+        size="mini">查看</el-button>
+    </template>
+  </SimpleTable>
+  <!-- <AccountDetail v-else
+    :formUI='formUI'
+    :form='table'
+    @detailReturn='()=>isList=true'>
+  </AccountDetail> -->
 </template>
 
 <script>
-import utils from '@/mixins/utils'
 import SimpleTable from '@/components/Widgets/SimpleTable'
+//import AccountDetail from '@/components/Views/Permission/AccountDetail'
 
 export default {
-  name: 'SysParamType',
-  mixins: [utils],
+  name: 'ControlPolicy',
+  //mixins: [utils],
   components: { SimpleTable },
   data() {
     return {
+      isList: true,
       tableFilter: {
         formUI: {
           inline: true,
@@ -22,7 +36,7 @@ export default {
         },
         items: [
           {
-            fieldName: 'name',
+            fieldName: 'group__name',
             comparison: 'contains',
             formVisible: true,
             formItemUI: {
@@ -30,16 +44,6 @@ export default {
             },
             editorUI: {
               placeHolder: '名称',
-            },
-          }, {
-            fieldName: 'code',
-            comparison: 'contains',
-            formVisible: true,
-            formItemUI: {
-              label: '编号:',
-            },
-            editorUI: {
-              placeHolder: '编号',
             },
           }, {
             fieldName: 'valid_flag',
@@ -66,70 +70,54 @@ export default {
         ],
       },
       table: {
-        tableName: 'SysParamType',
+        tableName: 'ControlPolicy',
+        hasOperatingColumn: true,
         items: [
           {
             fieldName: 'pk',
-          }, {
-            fieldName: 'name',
+          },
+          {
+            fieldName: 'group__name',
             columnVisible: true,
             editable: true,
+            formItemUI: {
+              label: '名称:',
+              // rules: [
+              //   { required: true, message: '名称不能为空！' },
+              // ],
+            },
             columnUI: {
               label: '名称',
             },
-
-            rules: [
-              { required: true, message: '名称不能为空！' },
-              {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
-                trigger: 'blur',
-              },
-            ],
-
           }, {
-            fieldName: 'code',
+            fieldName: 'role_type',
+            columnVisible: true,
+            editable: true,
+            formItemUI: {
+              label: '角色类型',
+            },
+            columnUI: {
+              label: '角色类型',
+            },
+          },// 其它
+          {// remark
+            fieldName: 'remark',
             columnVisible: true,
             editable: true,
             columnUI: {
-              label: '编号',
+              label: '备注',
             },
-
-            rules: [
-              { required: true, message: '编号不能为空！' },
-              {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
-                trigger: 'blur',
-              },
-            ],
-
-          }, {
+            editorUI: {
+              type: 'textarea',
+            },
+          }, {//sn
+            fieldName: 'sn',
             columnVisible: true,
+            editable: true,
             columnUI: {
-              label: '其它',
+              label: '排序号',
             },
-            hasChildren: true,
-            children: [
-              {
-                columnKey: '3',
-                fieldName: 'remark',
-                columnVisible: true,
-                editable: true,
-                columnUI: {
-                  label: '备注',
-                },
-                editorUI: {
-                  type: 'textarea',
-                },
-              }, {
-                columnKey: '4',
-                fieldName: 'sn',
-                columnVisible: true,
-                editable: true,
-                columnUI: {
-                  label: '排序号',
-                },
-              },]
-          }, {
+          }, {//valid_flag
             fieldName: 'valid_flag',
             columnVisible: true,
             editable: true,
@@ -150,11 +138,20 @@ export default {
           },
         ],
       },
+      formUI: {
+        inline: true,
+        labelWidth: '100px',
+        //showMessage: true,
+        // inlineMessage: true,
+      },
     }
   },
   methods: {
-
+    handleClick(row) {
+      this.isList = false
+    },
   },
 }
 </script>
+
 

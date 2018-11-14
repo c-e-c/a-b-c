@@ -495,6 +495,10 @@ export function setResource(record, props, parentFieldName) {
           editValue: record[fieldName],
         }
       }
+    } else {
+      tempProps.push(
+        generateProperty(prop),
+      )
     }
   })
 

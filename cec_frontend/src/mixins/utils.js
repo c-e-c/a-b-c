@@ -1,6 +1,8 @@
 /**
  * @mixin
  */
+import _ from 'lodash'
+
 import * as api_gda from '@/api/gda'
 import * as utils_ui from '@/utils/ui'
 import { Message } from 'element-ui'
@@ -132,6 +134,31 @@ export default {
           utils_ui.showErrorMessage(error)
           callback(new Error('校验失败'))
         })
+    },
+
+    /**
+     * 传入含有孩子的table.items数组，返回叶子节点列表对象
+     * 返回:
+     * [{
+     *    // item
+     * },]
+     */
+    _getLeafColumns(items) {
+      var retval = []
+      this.__findLeafColumns(retval, items)
+      return retval
+    },
+    __findLeafColumns(leafList, items) {
+      if (!items) {
+        return
+      }
+      items.forEach(element => {
+        if (element.hasChildren) {
+          this.__findLeafColumns(leafList, element.children)
+        } else {
+          leafList.push(element)
+        }
+      })
     },
   },
 }

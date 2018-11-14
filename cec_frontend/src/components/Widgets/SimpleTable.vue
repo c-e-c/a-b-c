@@ -13,7 +13,6 @@
     <!-- 表 -->
     <el-form ref='elForm'
       :model='tableData'
-      :rules='table.rules'
       inlineMessage>
       <el-table ref='elTable'
         :height='tableUI.height'
@@ -68,35 +67,10 @@
         <template v-for='(item, index) in table.items'>
           <simple-table-column v-if='item.columnVisible'
             :key='index'
-            :columnKey='index.toString()'
-            :prop="'props.'+index+'.editValue'"
+            :column='item'
             :columnUI='item.columnUI'>
-            <template :slot="'props.'+index+'.editValue'"
-              slot-scope='{ row, column, $index }'>
-              <template v-if='row.props && row.props[index]'>
-                <template v-if='row.props[index].editing'>
-                  <el-form-item :prop="'rows.'+$index+'.props.'+index+'.editValue'"
-                    label=''
-                    :rules="item.formItemUI?item.formItemUI.rules:[]"
-                    size='mini'>
-                    <DynamicEditor :editorUI='item.editorUI'
-                      :editorInfo='item'
-                      :editorModel='row.props[index]'
-                      @modelChanged='(val)=>{__handleTableCellModified(row, index, val)}' />
-                  </el-form-item>
-                </template>
-                <template v-else>
-                  <span> {{ row.props[index].displayValue }} </span>
-                </template>
-              </template>
-              <template v-else>
-                <span> 错误数据 </span>
-              </template>
-            </template>
           </simple-table-column>
         </template>
-        <!-- <slot name='customcolumn'></slot> -->
-
         <el-table-column v-if='table.hasOperatingColumn'
           fixed='right'
           label='操作'
@@ -130,9 +104,8 @@ import utils from '@/mixins/utils'
 import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
 import SimpleTableColumn from '@/components/Widgets/SimpleTableColumn'
 import SimpleForm from '@/components/Widgets/SimpleForm'
-import SimpleFormItem from '@/components/Widgets/SimpleFormItem'
 import SimplePagination from '@/components/Widgets/SimplePagination'
-import DynamicEditor from '@/components/Widgets/DynamicEditor'
+// import DynamicEditor from '@/components/Widgets/DynamicEditor'
 
 export default {
   name: 'SimpleTable',
@@ -140,9 +113,8 @@ export default {
     SimpleButtonGroup,
     SimpleTableColumn,
     SimpleForm,
-    SimpleFormItem,
     SimplePagination,
-    DynamicEditor,
+    // DynamicEditor,
   },
   mixins: [utils],
   props: {
@@ -173,25 +145,31 @@ export default {
      * 表信息
       {
         // 1、自定义部分
-        tableName: 'xxx',     // 必须，业务表名信息，xxx为业务表名
-        parentFieldName: 'xxx' // 节点的父属性， xxx为列属性
-        hasOperatingColumn: false // 可选，默认为false，不包含
+        tableName: 'xxx',         // 必须，业务表名信息，xxx为业务表名
+        parentFieldName: 'xxx'    // 可选，节点的父属性， xxx为列属性
+        hasOperatingColumn: false // 可选，不包含，默认为false
         // 2、表列
-        items:[               // 必须
+        items:[                   // 必须
           {
-            // 1、表列ui       // 必须
-            columnUI: {
+            // 1、表列ui
+            columnUI: {           // 必须
               // 参见element-ui组件el-table-column的属性
             },
-            // 2、可选 自定义部分      
-            editable: false,   // 列是否可编辑，默认为不可编辑
-            columnVisible:false,  // 列可显示
 
-            // 3、可选 表单内表单项内容
-            SimpleForm控件的form.items属性中的对象内容，参见SimpleForm.form.items[x]对象
+            // 2、自定义部分
+            fieldName: 'xxx',     // 可选，属性的属性名，xxx未业务表字段
+            editable: false,      // 可选，列是否可编辑，默认为false不可编辑
+            columnVisible:false,  // 可选，列可显示，默认未false不可视
+            rules:[{},],          // 可选，数组中rules的表单验证规则对象，参见element-ui组件el-form-items的rules属性
 
-            // 4、 可选 孩子
-            children:[{}],
+            // 3、单元格控件对象     // 可选
+            DynamicEditor控件的editorInfo的多个属性内容，参见DynamicEditor.editorInfo
+
+            // 4、可选 item的孩子,数组中为多个子item对象，当有hasChildren为true时，DynamicEditor属性无效
+            hasChildren: false, 
+            children:[{},],
+            // columnKey此字段SimpleTable初始化时自动生成
+            // columnKey: 'xxx', 
           },{
             ...
         }],
@@ -351,7 +329,9 @@ export default {
       },
     }
   },
-
+  created() {
+    this.__setTableColumnsLeafItems(this.table.items)
+  },
   mounted() {
     // 计算elTable的高度
     this.$nextTick(() => {
@@ -372,22 +352,22 @@ export default {
      */
     fetchData(filters, offset) {
       api_gda.listData(this.table.tableName,
-        this.table.items,
+        this._getLeafColumns(this.table.items),
         filters,
         this.$refs.simplePagination.getPageSize(),
         offset
       ).then((responseData) => {
         if (responseData.results) {
           // 生成分页数据
-          this.tableData.rows = utils_resource.setResources(responseData.results, this.table.items,
+          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         } else {
           // 生成不分页数据
-          this.tableData.rows = utils_resource.setResources(responseData, this.table.items,
+          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         }
         // 设置显示角色
-        this._setResourcesDisplayValue(this.tableData.rows, this.table.items)
+        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
         // 设置分页
         this.$refs.simplePagination.setPageTotal(responseData.count)
 
@@ -401,13 +381,13 @@ export default {
      */
     insertData(parentUri) {
       // 生成资源
-      let rd = utils_resource.generateResource(this.table.items)
+      let rd = utils_resource.generateResource(this._getLeafColumns(this.table.items))
       // 初始化设置资源属性
-      utils_resource.setResourceProperties(rd, this.table.items)
+      utils_resource.setResourceProperties(rd, this._getLeafColumns(this.table.items))
       // 设置资源的父
       utils_resource.setResourceParent(rd, parentUri)
       // 设置显示角色
-      this._setResourceDisplayValue(rd, this.table.items)
+      this._setResourceDisplayValue(rd, this._getLeafColumns(this.table.items))
       // 设置单元格正在编辑状态
       utils_resource.setResourceEditingState(rd, true)
 
@@ -491,7 +471,7 @@ export default {
           api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
             utils_resource.saveResources(this.tableData.rows, responseData)
             // 设置显示角色
-            this._setResourcesDisplayValue(this.tableData.rows, this.table.items)
+            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
             // 设置资源的编辑状态
             utils_resource.setResourcesEditingState(this.tableData.rows, false)
             this.$message({ message: '保存成功', type: 'success' })
@@ -555,6 +535,23 @@ export default {
       } else {
         return ''
       }
+    },
+    __setTableColumnsLeafItems(items) {
+      var leaf = { index: 0 }
+      this.__setLeafItems(items, leaf)
+    },
+    __setLeafItems(items, leaf) {
+      if (!items || !leaf || leaf.index < 0) {
+        return
+      }
+      items.forEach(element => {
+        if (element.hasChildren) {
+          this.__setLeafItems(element.children, leaf)
+        } else {
+          element.columnKey = leaf.index.toString()
+          leaf.index += 1
+        }
+      })
     },
   },
 }

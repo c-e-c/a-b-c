@@ -180,7 +180,7 @@ export default {
 
         //// 表列
         // 应用模块下拉
-        var tableAppModule = this.table.items.find(item => { return item.fieldName === 'app_module' })
+        var tableAppModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'app_module' })
         if (tableAppModule) {
           this._setDropdown(responseData['app_module'], tableAppModule.selectOptions[0].options)
         }

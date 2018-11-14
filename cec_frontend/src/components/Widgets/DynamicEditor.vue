@@ -98,10 +98,6 @@ export default {
      * 
       {
         // 具体控件属性,例如如果editorType='ElInput'就是el-input的属性
-        // 可选 如果是el-select就是el-select的属性
-        editorUI:{
-          // 具体控件属性，参见element-ui组件
-        },
         // 可选 默认为ElInput类型，值为elementui的组件名如ElInput、ElSelect
         editorType: 'ElInput',
         // 可选 设置默认值

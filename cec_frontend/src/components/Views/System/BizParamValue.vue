@@ -255,12 +255,12 @@ export default {
 
         //// 表列
         // 业务模块下拉
-        var tableBizModule = this.table.items.find(item => { return item.fieldName === 'biz_module' })
+        var tableBizModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'biz_module' })
         if (tableBizModule) {
           this._setDropdown(responseData['biz_module'], tableBizModule.selectOptions[0].options)
         }
         // 应用模块下拉
-        var tableAppModule = this.table.items.find(item => { return item.fieldName === 'app_instance' })
+        var tableAppModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'app_instance' })
         if (tableAppModule) {
           this._setDropdown(responseData['app_instance'], tableAppModule.selectOptions[0].options)
         }
