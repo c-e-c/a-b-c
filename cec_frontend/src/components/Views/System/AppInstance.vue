@@ -64,17 +64,15 @@ export default {
             columnUI: {
               label: '名称',
             },
-            formItemUI: {
-              rules: [
-                { required: true, message: '名称不能为空！' },
-                {
-                  validator: (rule, value, callback) => {
-                    this.$refs.simpleTable.validateUnique(rule, value, callback)
-                  },
-                  trigger: 'blur',
+            rules: [
+              { required: true, message: '名称不能为空！' },
+              {
+                validator: (rule, value, callback) => {
+                  this.$refs.simpleTable.validateUnique(rule, value, callback)
                 },
-              ],
-            },
+                trigger: 'blur',
+              },
+            ],
           }, {
             fieldName: 'code',
             columnVisible: true,
@@ -82,17 +80,15 @@ export default {
             columnUI: {
               label: '编号',
             },
-            formItemUI: {
-              rules: [
-                { required: true, message: '编号不能为空！' },
-                {
-                  validator: (rule, value, callback) => {
-                    this.$refs.simpleTable.validateUnique(rule, value, callback)
-                  },
-                  trigger: 'blur',
+            rules: [
+              { required: true, message: '编号不能为空！' },
+              {
+                validator: (rule, value, callback) => {
+                  this.$refs.simpleTable.validateUnique(rule, value, callback)
                 },
-              ],
-            },
+                trigger: 'blur',
+              },
+            ],
           }, {
             fieldName: 'app_module',
             columnVisible: true,

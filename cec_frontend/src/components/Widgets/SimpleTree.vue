@@ -69,10 +69,23 @@ export default {
       default: true,
     },
     /**
+     * 树过滤条件信息UI，参见SimpleForm的formUI属性
+     */
+    treeFilterUI: {
+      type: Object,
+      default: function () {
+        return {
+          labelPosition: 'top',
+          size: 'mini',
+        }
+      },
+    },
+    /**
      * 树过滤条件信息，参见SimpleForm的form属性
      */
     treeFilter: {
       type: Object,
+      default: function () { return {} },
     },
     /**
      * 表ui

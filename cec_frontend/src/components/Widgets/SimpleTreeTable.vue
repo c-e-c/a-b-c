@@ -3,6 +3,7 @@
     <el-aside>
       <SimpleTree ref='simpleTree'
         :treeFilterVisible='treeFilterVisible'
+        :treeFilterUI='treeFilterUI'
         :treeFilter='treeFilter'
         :treeUI='treeUI'
         :tree='tree'
@@ -11,6 +12,7 @@
     <el-main>
       <SimpleTable ref='simpleTable'
         :tableFilterVisible='tableFilterVisible'
+        :tableFilterUI='tableFilterUI'
         :tableFilter='tableFilter'
         :tableUI='tableUI'
         :table='table'
@@ -39,6 +41,13 @@ export default {
     treeFilterVisible: {
       type: Boolean,
       default: true,
+    },
+    /**
+     * 树过滤条件信息，参见SimpleTree的treeFilterUI属性 
+     */
+    treeFilterUI: {
+      type: Object,
+      default: function () { return {} },
     },
     /**
      * 树过滤条件信息，参见SimpleTree的treeFilter属性 
@@ -70,6 +79,14 @@ export default {
       type: Boolean,
       default: true,
     },
+    /**
+     * 表过滤条件信息，参见SimpleTable的tableFilterUI属性
+     */
+    tableFilterUI: {
+      type: Object,
+      default: function () { return {} },
+    },
+
     /**
      * 表过滤条件信息，参见SimpleTable的tableFilter属性
      */

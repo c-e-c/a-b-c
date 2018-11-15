@@ -112,7 +112,7 @@ export default {
             // 1、自定义部分
             fieldName: xxx,         // 可选，属性的属性名
             comparison: 'xxx'       // 可选，默认为exact，操作符，具体参照django的Fields的lookup分词
-            formVisible: false,         // 可选，默认为不显示，列是否可展示  
+            formVisible: false,     // 可选，默认为不显示，列是否可展示  
 
             // 2、可选 表单内表单项对象
             formItemUI: {

@@ -2,7 +2,6 @@
   <SimpleTreeTable ref='treeTable'
     :treeFilter='treeFilter'
     :tree='tree'
-    :treeUI='tree.treeUI'
     :tableFilter='tableFilter'
     :table='table'
     tableAssoProp='param_type' />
@@ -21,10 +20,6 @@ export default {
   data() {
     return {
       treeFilter: {
-        formUI: {
-          labelPosition: 'top',
-          size: 'mini',
-        },
         items: [
           {
             fieldName: 'name',
@@ -45,20 +40,12 @@ export default {
         rootVisible: true,
         rootName: '业务参数类型',
         displayFieldName: 'name',
-        treeUI: {
-          defaultExpandAll: true,
-        },
         items: [
           { fieldName: 'pk' },
           { fieldName: 'name' },
         ],
       },
       tableFilter: {
-        formUI: {
-          inline: true,
-          inlineMessage: true,
-          size: 'mini',
-        },
         items: [
           {
             fieldName: 'name',
@@ -121,17 +108,15 @@ export default {
             columnUI: {
               label: '名称',
             },
-            formItemUI: {
-              rules: [
-                { required: true, message: '名称不能为空！' },
-                {
-                  validator: (rule, value, callback) => {
-                    this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
-                  },
-                  trigger: 'blur',
+            rules: [
+              { required: true, message: '名称不能为空！' },
+              {
+                validator: (rule, value, callback) => {
+                  this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
                 },
-              ],
-            },
+                trigger: 'blur',
+              },
+            ],
           }, {
             fieldName: 'code',
             columnVisible: true,
@@ -139,17 +124,15 @@ export default {
             columnUI: {
               label: '编号',
             },
-            formItemUI: {
-              rules: [
-                { required: true, message: '编号不能为空！' },
-                {
-                  validator: (rule, value, callback) => {
-                    this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
-                  },
-                  trigger: 'blur',
+            rules: [
+              { required: true, message: '编号不能为空！' },
+              {
+                validator: (rule, value, callback) => {
+                  this.$refs.treeTable.validateTableCellUnique(rule, value, callback)
                 },
-              ],
-            },
+                trigger: 'blur',
+              },
+            ],
           }, {
             fieldName: 'app_instance',
             columnVisible: true,

@@ -72,15 +72,15 @@ export default {
             columnUI: {
               label: '名称',
             },
-
             rules: [
               { required: true, message: '名称不能为空！' },
               {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                validator: (rule, value, callback) => {
+                  this.$refs.simpleTable.validateUnique(rule, value, callback)
+                },
                 trigger: 'blur',
               },
             ],
-
           }, {
             fieldName: 'code',
             columnVisible: true,
@@ -88,11 +88,12 @@ export default {
             columnUI: {
               label: '编号',
             },
-
             rules: [
               { required: true, message: '编号不能为空！' },
               {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                validator: (rule, value, callback) => {
+                  this.$refs.simpleTable.validateUnique(rule, value, callback)
+                },
                 trigger: 'blur',
               },
             ],
@@ -139,7 +140,6 @@ export default {
     }
   },
   methods: {
-
   },
 }
 </script>
