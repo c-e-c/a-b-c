@@ -6,7 +6,7 @@
         <el-col :span="20">
           <SimpleForm ref='treeFilter'
             class='simplefilter'
-            :formUI='treeFilter.formUI'
+            :formUI='treeFilterUI'
             :form='treeFilter'
             @modelChanged='__filterText' />
         </el-col>
@@ -14,7 +14,7 @@
           <el-button class='freshbutton'
             type='primary'
             icon='el-icon-refresh'
-            :size='treeFilter.formUI.size'
+            :size='treeFilterUI.size'
             @click.native='fetchData'></el-button>
         </el-col>
       </el-row>

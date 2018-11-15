@@ -47,7 +47,12 @@ export default {
      */
     treeFilterUI: {
       type: Object,
-      default: function () { return {} },
+      default: function () {
+        return {
+          labelPosition: 'top',
+          size: 'mini',
+        }
+      },
     },
     /**
      * 树过滤条件信息，参见SimpleTree的treeFilter属性 
@@ -63,7 +68,7 @@ export default {
      */
     treeUI: {
       type: Object,
-      default: function () { return {} },
+      default: function () { },
     },
     /** 
      * 树信息，参见SimpleTree的tree对象 
@@ -84,7 +89,13 @@ export default {
      */
     tableFilterUI: {
       type: Object,
-      default: function () { return {} },
+      default: function () {
+        return {
+          inline: true,
+          inlineMessage: true,
+          size: 'mini',
+        }
+      },
     },
 
     /**
