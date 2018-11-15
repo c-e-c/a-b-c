@@ -16,11 +16,6 @@ export default {
   data() {
     return {
       tableFilter: {
-        formUI: {
-          inline: true,
-          inlineMessage: true,
-          size: 'mini',
-        },
         items: [
           {
             fieldName: 'app_module',

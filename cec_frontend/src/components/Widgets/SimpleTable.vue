@@ -8,7 +8,7 @@
     <SimpleForm v-if='tableFilterVisible'
       ref='simpleFilter'
       class='simplefilter'
-      :formUI='tableFilter.formUI'
+      :formUI='tableFilterUI'
       :form='tableFilter' />
     <!-- 表 -->
     <el-form ref='elForm'
@@ -105,7 +105,6 @@ import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
 import SimpleTableColumn from '@/components/Widgets/SimpleTableColumn'
 import SimpleForm from '@/components/Widgets/SimpleForm'
 import SimplePagination from '@/components/Widgets/SimplePagination'
-// import DynamicEditor from '@/components/Widgets/DynamicEditor'
 
 export default {
   name: 'SimpleTable',
@@ -114,7 +113,6 @@ export default {
     SimpleTableColumn,
     SimpleForm,
     SimplePagination,
-    // DynamicEditor,
   },
   mixins: [utils],
   props: {
@@ -124,6 +122,19 @@ export default {
     tableFilterVisible: {
       type: Boolean,
       default: true,
+    },
+    /**
+     * 表过滤条件信息，参见SimpleForm的form属性
+     */
+    tableFilterUI: {
+      type: Object,
+      default: function () {
+        return {
+          inline: true,
+          inlineMessage: true,
+          size: 'mini',
+        }
+      },
     },
     /**
      * 表过滤条件信息，参见SimpleForm的form属性

@@ -15,11 +15,6 @@ export default {
   data() {
     return {
       tableFilter: {
-        formUI: {
-          inline: true,
-          inlineMessage: true,
-          size: 'mini',
-        },
         items: [
           {
             fieldName: 'name',
@@ -103,32 +98,23 @@ export default {
             ],
 
           }, {
+            fieldName: 'remark',
             columnVisible: true,
+            editable: true,
             columnUI: {
-              label: '其它',
+              label: '备注',
             },
-            hasChildren: true,
-            children: [
-              {
-                columnKey: '3',
-                fieldName: 'remark',
-                columnVisible: true,
-                editable: true,
-                columnUI: {
-                  label: '备注',
-                },
-                editorUI: {
-                  type: 'textarea',
-                },
-              }, {
-                columnKey: '4',
-                fieldName: 'sn',
-                columnVisible: true,
-                editable: true,
-                columnUI: {
-                  label: '排序号',
-                },
-              },]
+            editorUI: {
+              type: 'textarea',
+            },
+          }, {
+            fieldName: 'sn',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '排序号',
+            },
+
           }, {
             fieldName: 'valid_flag',
             columnVisible: true,
