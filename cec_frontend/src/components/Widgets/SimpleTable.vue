@@ -3,7 +3,7 @@
     <!-- 工具栏按钮 -->
     <SimpleButtonGroup ref='simpleButtonGroup'
       class='simplebuttongroup'
-      :buttonGroup='buttonGroupData' />
+      :buttonGroup='__toolButtonGroupData' />
     <!-- 查询条件 -->
     <SimpleForm v-if='tableFilterVisible'
       ref='simpleFilter'
@@ -12,7 +12,7 @@
       :form='tableFilter' />
     <!-- 表 -->
     <el-form ref='elForm'
-      :model='tableData'
+      :model='__tableData'
       inlineMessage>
       <el-table ref='elTable'
         :height='tableUI.height'
@@ -43,7 +43,7 @@
         :sum-text='tableUI.sumText'
         :summary-method='tableUI.summaryMethod'
         :span-method='tableUI.spanMethod'
-        :data='tableData.rows'
+        :data='__tableData.rows'
         @selection-change='__handleTableSelectionChanged'>
         <!-- <el-table-column type='expand' fixed>
           <template slot-scope='props'>
@@ -77,6 +77,18 @@
           align='center'>
           <template slot-scope='{ row, column, $index }'>
             <el-form-item size='mini'>
+              <el-button :size='detailOperatingButton.size'
+                :type='detailOperatingButton.type'
+                :plain='detailOperatingButton.plain'
+                :round='detailOperatingButton.round'
+                :loading='detailOperatingButton.loading'
+                :disabled='detailOperatingButton.disabled'
+                :icon='detailOperatingButton.icon'
+                :autofocus='detailOperatingButton.autofocus'
+                :native-type='detailOperatingButton.nativeType'
+                @click='__handleDetailButtonClicked(row,column,$index)'>
+                {{detailOperatingButton.name}}</el-button>
+
               <slot name='operating_column'
                 :row='row'
                 :column='column'
@@ -158,7 +170,7 @@ export default {
         // 1、自定义部分
         tableName: 'xxx',         // 必须，业务表名信息，xxx为业务表名
         parentFieldName: 'xxx'    // 可选，节点的父属性， xxx为列属性
-        hasOperatingColumn: false // 可选，不包含，默认为false
+        hasOperatingColumn: false // 可选，业务操作列，默认为false
         // 2、表列
         items:[                   // 必须
           {
@@ -191,151 +203,56 @@ export default {
       required: true,
     },
     /**
-     * 已有按钮组，包含search,add,remove,save,pass,reject,print,import,export
+     * 要替换的工具按钮组，已有按钮组，包含uri：search,add,remove,save,print,import,export
+     * 这些可以被替代默认设置，也可以自定义值，
       [
-        {
-          uri: 'search',
-          name: '查询',
-          click: this.__handleSearchButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-search'
-          },
-          ...
-        }
+        [ // 分组
+          {
+            uri:'xxx'          // xxx为按钮唯一标示uri
+            click:'',          // click为点击事件
+            name:'',           // name为按钮名字
+            buttonUI:{
+              // 参见element-ui el-button的属性
+            },
+          },...
+        ],
+        ...
       ]
      */
-    defaultButtonGroup: {
+    toolButtonGroup: {
       type: Array,
       default: function () { return [] },
     },
+
+    /**
+     * 详情操作按钮
+        {
+          name:'',           // name为按钮名字
+          buttonUI:{
+            // 参见element-ui el-button的属性
+          },
+        }
+     */
+    detailOperatingButton: {
+      type: Object,
+      default: function () {
+        return {
+          name: '详情',
+          buttonUI: {
+            type: 'text',
+            size: 'mini',
+          },
+        }
+      },
+    },
   },
   data: function () {
-    var tempButtonGroup = [
-      [
-        {
-          uri: 'search',
-          name: '查询',
-          click: this.__handleSearchButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-search',
-          },
-        },
-      ], [
-        {
-          uri: 'add',
-          name: '增加',
-          click: this.__handleAddButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-circle-plus-outline',
-          }
-        }, {
-          uri: 'modify',
-          name: '修改',
-          click: this.__handleModifyButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-document',
-          }
-        }, {
-          uri: 'remove',
-          name: '删除',
-          click: this.__handleDeleteButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-remove-outline',
-          }
-        }, {
-          uri: 'save',
-          name: '保存',
-          click: this.__handleSaveButtonClicked,
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-tickets',
-          }
-        },
-      ], [
-        {
-          uri: 'pass',
-          name: '通过',
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-circle-check-outline',
-          }
-        }, {
-          uri: 'reject',
-          name: '驳回',
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-circle-close-outline',
-          }
-        },
-      ], [
-        {
-          uri: 'import',
-          name: '导入',
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-upload2',
-          }
-        }, {
-          uri: 'export',
-          name: '导出',
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-download',
-          }
-        }, {
-          uri: 'print',
-          name: '打印',
-          visible: true,
-          buttonUI: {
-            type: 'primary',
-            size: 'mini',
-            icon: 'el-icon-printer',
-          }
-        },
-      ]
-    ]
-    // 设置已有按钮组数据
-    this.defaultButtonGroup.forEach(button => {
-      var tempButton = null
-      tempButton = this.__findButtonGroup(tempButtonGroup, button.uri)
-      if (tempButton) {
-        Object.keys(button).forEach(prop => {
-          tempButton[prop] = button[prop]
-        })
-      }
-    })
-
     return {
-      // 按钮组
-      buttonGroupData: tempButtonGroup,
+      // 工具按钮组
+      __toolButtonGroupData: this.__getToolButtonGroup(),
 
       // 表数据
-      tableData: {
+      __tableData: {
         rows: [],// 资源描述序列
       },
     }
@@ -370,15 +287,15 @@ export default {
       ).then((responseData) => {
         if (responseData.results) {
           // 生成分页数据
-          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
+          this.__tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         } else {
           // 生成不分页数据
-          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
+          this.__tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         }
         // 设置显示角色
-        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
+        this._setResourcesDisplayValue(this.__tableData.rows, this._getLeafColumns(this.table.items))
         // 设置分页
         this.$refs.simplePagination.setPageTotal(responseData.count)
 
@@ -403,7 +320,7 @@ export default {
       utils_resource.setResourceEditingState(rd, true)
 
       // 插入一条资源
-      utils_resource.addResource(this.tableData.rows, rd)
+      utils_resource.addResource(this.__tableData.rows, rd)
     },
     /**
      * 校验单元格的唯一性 
@@ -414,11 +331,11 @@ export default {
       var rowIndex = rule.field.split('.')[1]   // rows.x.props.y.editValue
       var fieldIndex = rule.field.split('.')[3]  // rows.x.props.y.editValue
       // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
-      var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
+      var state = utils_resource.getResourceDifferenceState(this.__tableData.rows[rowIndex])
       if (state === 'ROW_ADDED') {
         this._validateUnique(rule, value, callback,
           this.table.tableName,
-          this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
+          this.__tableData.rows[rowIndex].props[fieldIndex].fieldName)
       } else {
         callback()
       }
@@ -448,21 +365,29 @@ export default {
     },
     // 表行的选择列被改变事件
     __handleTableSelectionChanged(selection) {
-      utils_resource.setResourcesSelectedState(this.tableData.rows, selection)
+      utils_resource.setResourcesSelectedState(this.__tableData.rows, selection)
+    },
+    // 点击详情按钮
+    __handleDetailButtonClicked(row, column, $index) {
+      /**
+       * 某条表记录的详情按钮被点击
+       * @event tableRecordDetailClicked
+       */
+      this.$emit('tableRecordDetailClicked')
     },
     // 点击修改按钮
     __handleModifyButtonClicked() {
-      utils_resource.setResourcesEditingState(this.tableData.rows, true)
+      utils_resource.setResourcesEditingState(this.__tableData.rows, true)
     },
     // 点击删除按钮
     __handleDeleteButtonClicked() {
-      if (!utils_resource.hasResourcesSelected(this.tableData.rows)) {
+      if (!utils_resource.hasResourcesSelected(this.__tableData.rows)) {
         this.$message({ message: '请选择要删除的记录', type: 'warning' })
         return
       }
       this.$confirm('确认要删除已选的记录吗?', '提示', { type: 'warning' }
       ).then(() => {
-        utils_resource.removeResources(this.tableData.rows)
+        utils_resource.removeResources(this.__tableData.rows)
       }).catch(() => {
         this.$message({ message: '取消删除', type: 'info' })
       })
@@ -473,24 +398,24 @@ export default {
       this.$refs.elForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
-          var diffModel = utils_resource.getDifferenceModel(this.tableData)
+          var diffModel = utils_resource.getDifferenceModel(this.__tableData)
           if (!diffModel) {
             // 设置资源的编辑状态
-            utils_resource.setResourcesEditingState(this.tableData.rows, false)
+            utils_resource.setResourcesEditingState(this.__tableData.rows, false)
             return
           }
           api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
-            utils_resource.saveResources(this.tableData.rows, responseData)
+            utils_resource.saveResources(this.__tableData.rows, responseData)
             // 设置显示角色
-            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
+            this._setResourcesDisplayValue(this.__tableData.rows, this._getLeafColumns(this.table.items))
             // 设置资源的编辑状态
-            utils_resource.setResourcesEditingState(this.tableData.rows, false)
+            utils_resource.setResourcesEditingState(this.__tableData.rows, false)
             this.$message({ message: '保存成功', type: 'success' })
             /**
              * 表保存后
-             * @event tableSave
+             * @event tableDataSaved
              */
-            this.$emit('tableSave')
+            this.$emit('tableDataSaved')
           }).catch((error) => {
             // 设置界面
             utils_ui.showErrorMessage(error)
@@ -563,6 +488,134 @@ export default {
           leaf.index += 1
         }
       })
+    },
+    __getToolButtonGroup() {
+      // 设置已有toolbuttongroup数据
+      var tempToolButtonGroup = null
+      var defaultToolButtonGroup = [
+        [
+          {
+            uri: 'search',
+            name: '查询',
+            click: this.__handleSearchButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-search',
+            },
+          },
+        ], [
+          {
+            uri: 'add',
+            name: '增加',
+            click: this.__handleAddButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-circle-plus-outline',
+            }
+          }, {
+            uri: 'modify',
+            name: '修改',
+            click: this.__handleModifyButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-document',
+            }
+          }, {
+            uri: 'remove',
+            name: '删除',
+            click: this.__handleDeleteButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-remove-outline',
+            }
+          }, {
+            uri: 'save',
+            name: '保存',
+            click: this.__handleSaveButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-tickets',
+            }
+          },
+          // ], [
+          //   {
+          //     uri: 'pass',
+          //     name: '通过',
+          //     visible: true,
+          //     buttonUI: {
+          //       type: 'primary',
+          //       size: 'mini',
+          //       icon: 'el-icon-circle-check-outline',
+          //     }
+          //   }, {
+          //     uri: 'reject',
+          //     name: '驳回',
+          //     visible: true,
+          //     buttonUI: {
+          //       type: 'primary',
+          //       size: 'mini',
+          //       icon: 'el-icon-circle-close-outline',
+          //     }
+          //   },
+        ], [
+          {
+            uri: 'import',
+            name: '导入',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-upload2',
+            }
+          }, {
+            uri: 'export',
+            name: '导出',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-download',
+            }
+          }, {
+            uri: 'print',
+            name: '打印',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-printer',
+            }
+          },
+        ]
+      ]
+      if (!this.toolButtonGroup || this.toolButtonGroup.length === 0) {
+        tempToolButtonGroup = defaultToolButtonGroup
+      } else {
+        tempToolButtonGroup = this.toolButtonGroup
+        tempToolButtonGroup.forEach(group => {
+          group.forEach(button => {
+            var tempButton = null
+            tempButton = this.__findButtonGroup(defaultToolButtonGroup, button.uri)
+            if (tempButton) {
+              Object.keys(button).forEach(prop => {
+                tempButton[prop] = button[prop]
+              })
+            }
+            button = tempButton
+          })
+        })
+      }
+      return tempToolButtonGroup
     },
   },
 }

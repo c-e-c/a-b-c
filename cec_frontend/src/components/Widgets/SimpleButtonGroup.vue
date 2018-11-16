@@ -2,7 +2,8 @@
   <div>
     <template v-for='group in buttonGroup'>
       <el-button-group class='button-group'>
-        <el-button v-for='button in group' v-if='button.visible'
+        <el-button v-for='button in group'
+          v-if='button.visible'
           :key='button.uri'
           :size='button.buttonUI.size'
           :type='button.buttonUI.type'
@@ -11,13 +12,11 @@
           :loading='button.buttonUI.loading'
           :disabled='button.buttonUI.disabled'
           :icon='button.buttonUI.icon'
-          :autofocus='button.buttonUI.autofocus' 
+          :autofocus='button.buttonUI.autofocus'
           :native-type='button.buttonUI.nativeType'
-
-          @click.native='button.click'
-          >
+          @click.native='button.click'>
           {{ button.name }}
-        </el-button>   
+        </el-button>
       </el-button-group>
     </template>
   </div>
@@ -37,6 +36,7 @@ export default {
             uri:'xxx'          // xxx为按钮唯一标示uri
             click:'',          // click为点击事件
             name:'',           // name为按钮名字
+            visible: true      // 是否可视
             buttonUI:{
               // 参见element-ui el-button的属性
             },

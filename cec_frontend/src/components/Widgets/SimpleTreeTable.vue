@@ -16,8 +16,8 @@
         :tableFilter='tableFilter'
         :tableUI='tableUI'
         :table='table'
-        :defaultButtonGroup='defaultButtonGroup'
-        @tableSave='__queryTreeData' />
+        :toolButtonGroup='toolButtonGroup'
+        @tableDataSaved='__queryTreeData' />
     </el-main>
   </el-container>
 </template>
@@ -130,7 +130,7 @@ export default {
   },
   data() {
     return {
-      defaultButtonGroup: [
+      toolButtonGroup: [
         {
           uri: 'search',
           click: this.__queryTableData,
