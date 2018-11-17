@@ -449,8 +449,9 @@ export function refreshResources(rds, props) {
 
 /**
  * 将api返回json数据转换成资源
- * props:要转换的资源属性
- * records:为转换前的数据
+ * props:要转换的资源属性，格式如[{fieldName:'xxx'},{fieldName:'xxx'}]
+ * records:为转换前的数据，格式如[{code:'xxx',name:'xxx'},{code:'xxx',name:'xxx'}]
+ * parentFieldName:父属性
  */
 export function setResources(records, props, parentFieldName) {
   if (!records) return
@@ -463,8 +464,8 @@ export function setResources(records, props, parentFieldName) {
 
 /**
  * 将api返回json数据转换成资源如[{code:'xxx',name:'xxx'}]
- * props:要转换的资源属性
- * record:为转换前的数据
+ * props:要转换的资源属性，格式如[{fieldName:'xxx'},{fieldName:'xxx'}]
+ * record:为转换前的数据，格式如[{code:'xxx',name:'xxx'},{code:'xxx',name:'xxx'}]
  * parentFieldName:父属性
  */
 export function setResource(record, props, parentFieldName) {
@@ -496,9 +497,7 @@ export function setResource(record, props, parentFieldName) {
         }
       }
     } else {
-      tempProps.push(
-        generateProperty(prop),
-      )
+      tempProps.push(generateProperty(prop))
     }
   })
 

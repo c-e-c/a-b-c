@@ -2,7 +2,7 @@
   <el-table-column v-if='column.children && column.children.length>0'
     :type='columnUI.type'
     :index='columnUI.index'
-    :column-key='column.columnKey'
+    :column-key='column.itemKey'
     :label='columnUI.label'
     :prop='columnUI.prop'
     :width='columnUI.width'
@@ -35,9 +35,9 @@
   <el-table-column v-else
     :type='columnUI.type'
     :index='columnUI.index'
-    :column-key='column.columnKey'
+    :column-key='column.itemKey'
     :label='columnUI.label'
-    :prop="'props.'+column.columnKey+'.editValue'"
+    :prop="'props.'+column.itemKey+'.editValue'"
     :width='columnUI.width'
     :min-width='columnUI.minWidth'
     :fixed='columnUI.fixed'
@@ -59,20 +59,20 @@
     :filtered-value='columnUI.filteredValue'>
 
     <template slot-scope='{ row, column, $index }'>
-      <template v-if='row.props && row.props[column.columnKey]'>
-        <template v-if='row.props[column.columnKey].editing'>
-          <el-form-item :prop="'rows.'+$index+'.props.'+column.columnKey+'.editValue'"
+      <template v-if='row.props && row.props[column.itemKey]'>
+        <template v-if='row.props[column.itemKey].editing'>
+          <el-form-item :prop="'rows.'+$index+'.props.'+column.itemKey+'.editValue'"
             label=''
             :rules="column.rules?column.rules:[]"
             size='mini'>
             <DynamicEditor :editorUI='column.editorUI'
               :editorInfo='column.editorInfo'
-              :editorModel='row.props[column.columnKey]'
-              @modelChanged='(val)=>{__handleTableCellModified(row, column.columnKey, val)}' />
+              :editorModel='row.props[column.itemKey]'
+              @modelChanged='(val)=>{__handleTableCellModified(row, column.itemKey, val)}' />
           </el-form-item>
         </template>
         <template v-else>
-          <span> {{ row.props[column.columnKey].displayValue }} </span>
+          <span> {{ row.props[column.itemKey].displayValue }} </span>
         </template>
       </template>
       <template v-else>
@@ -119,9 +119,6 @@ export default {
     }
   },
   methods: {
-    __test(row, column, $index, columnKey) {
-      console.log(111)
-    },
     __handleTableCellModified(rd, index, prop) {
       utils_resource.modifyResource(rd, index, prop)
     },

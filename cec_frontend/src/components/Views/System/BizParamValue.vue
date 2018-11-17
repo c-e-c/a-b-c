@@ -226,24 +226,24 @@ export default {
       api_gda.multilistData(listdata).then((responseData) => {
         //// 过滤条件
         // 业务模块下拉
-        var filterBizModule = this._getLeafColumns(this.tableFilter.items).find(item => { return item.fieldName === 'biz_module' })
+        var filterBizModule = this._getLeafItems(this.tableFilter.items).find(item => { return item.fieldName === 'biz_module' })
         if (filterBizModule) {
           this._setDropdown(responseData['biz_module'], filterBizModule.selectOptions[0].options)
         }
         // 所属应用下拉
-        var filterAppModule = this._getLeafColumns(this.tableFilter.items).find(item => { return item.fieldName === 'app_instance' })
+        var filterAppModule = this._getLeafItems(this.tableFilter.items).find(item => { return item.fieldName === 'app_instance' })
         if (filterAppModule) {
           this._setDropdown(responseData['app_instance'], filterAppModule.selectOptions[0].options)
         }
 
         //// 表列
         // 业务模块下拉
-        var tableBizModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'biz_module' })
+        var tableBizModule = this._getLeafItems(this.table.items).find(item => { return item.fieldName === 'biz_module' })
         if (tableBizModule) {
           this._setDropdown(responseData['biz_module'], tableBizModule.selectOptions[0].options)
         }
         // 应用模块下拉
-        var tableAppModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'app_instance' })
+        var tableAppModule = this._getLeafItems(this.table.items).find(item => { return item.fieldName === 'app_instance' })
         if (tableAppModule) {
           this._setDropdown(responseData['app_instance'], tableAppModule.selectOptions[0].options)
         }

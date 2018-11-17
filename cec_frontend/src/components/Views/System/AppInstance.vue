@@ -164,14 +164,14 @@ export default {
 
       api_gda.multilistData(listdata).then((responseData) => {
         //// 过滤条件
-        var filterAppModule = this._getLeafColumns(this.tableFilter.items).find(item => { return item.fieldName === 'app_module' })
+        var filterAppModule = this._getLeafItems(this.tableFilter.items).find(item => { return item.fieldName === 'app_module' })
         if (filterAppModule) {
           this._setDropdown(responseData['app_module'], filterAppModule.selectOptions[0].options)
         }
 
         //// 表列
         // 应用模块下拉
-        var tableAppModule = this._getLeafColumns(this.table.items).find(item => { return item.fieldName === 'app_module' })
+        var tableAppModule = this._getLeafItems(this.table.items).find(item => { return item.fieldName === 'app_module' })
         if (tableAppModule) {
           this._setDropdown(responseData['app_module'], tableAppModule.selectOptions[0].options)
         }

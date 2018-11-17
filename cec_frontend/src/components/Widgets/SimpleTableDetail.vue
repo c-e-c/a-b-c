@@ -34,8 +34,8 @@ export default {
       default: function () { return {} },
     },
     detailFormModel: {
-      type: Array,
-      default: function () { return [] },
+      type: Object,
+      default: function () { return {} },
     },
   },
   data() {

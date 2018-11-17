@@ -41,25 +41,6 @@
 
       </template>
     </template>
-    <!-- </div> -->
-
-    <!-- <el-form-item :key='item.uri'
-        :prop="
-          'props.'+index+
-          '.editValue'
-          "
-        :label='item.formItemUI.label'
-        :label-width='item.formItemUI.labelWidth'
-        :required='item.formItemUI.required'
-        :rules='item.formItemUI.rules'
-        :error='item.formItemUI.error'
-        :show-message='item.formItemUI.showMessage'
-        :inline-message='item.formItemUI.inlineMessage'
-        :size='item.formItemUI.size'>
-        <DynamicEditor :editorUI='item.editorUI'
-          :editorInfo='item'
-          v-model='formData.props[index]' />
-      </el-form-item> -->
     <template v-else
       v-for='(item, index) in form.items'>
       <simple-form-item v-if='item.formVisible'
@@ -136,23 +117,24 @@ export default {
      * formmodel数据，参见资源描述对象
      */
     formModel: {
-      type: Array,
-      default: function () { return [] },
+      type: Object,
+      default: function () { return {} },
     },
   },
   data: function () {
-    var tempFormData = []
-    if (this.formModel && this.formModel.length !== 0) {
+    var tempFormData = {}
+    if (this.formModel && Object.keys(this.formModel).length !== 0) {
       tempFormData = JSON.parse(JSON.stringify(this.formModel))
     } else {
-      tempFormData = utils_resource.generateProperties(this._getLeafColumns(this.form.items))
+      tempFormData = {
+        props: utils_resource.generateProperties(this._getLeafColumns(this.form.items))
+      }
     }
-
     return {
       /**
        * formData为资源描述属性列表props信息，参考资源描述标准。其中每个列表属性需要与form.items的列表一一对应
       */
-      formData: { props: tempFormData },
+      formData: tempFormData,
     }
   },
   watch: {

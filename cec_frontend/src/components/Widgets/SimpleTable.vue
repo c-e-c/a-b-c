@@ -200,8 +200,8 @@ export default {
 
             // 4、可选 item的孩子,数组中为多个子item对象，当有孩子时时，DynamicEditor属性无效
             children:[{},],
-            // columnKey此字段SimpleTable初始化时自动生成
-            // columnKey: 'xxx', 
+            // itemKey此字段SimpleTable初始化时自动生成
+            // itemKey: 'xxx', 
           },{
             ...
         }],
@@ -276,7 +276,7 @@ export default {
     }
   },
   created() {
-    this.__setTableColumnsLeafItems(this.table.items)
+    this._setLeafItems(this.table.items)
   },
   mounted() {
     // 计算elTable的高度
@@ -285,7 +285,6 @@ export default {
     })
     this.__handleResize()
   },
-
   methods: {
     /**
      * 得到过滤器数据
@@ -298,22 +297,22 @@ export default {
      */
     fetchData(filters, offset) {
       api_gda.listData(this.table.tableName,
-        this._getLeafColumns(this.table.items),
+        this._getLeafItems(this.table.items),
         filters,
         this.$refs.simplePagination.getPageSize(),
         offset
       ).then((responseData) => {
         if (responseData.results) {
           // 生成分页数据
-          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
+          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafItems(this.table.items),
             this.table.parentUri)
         } else {
           // 生成不分页数据
-          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
+          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafItems(this.table.items),
             this.table.parentUri)
         }
         // 设置显示角色
-        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
+        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.table.items))
         // 设置分页
         this.$refs.simplePagination.setPageTotal(responseData.count)
 
@@ -327,13 +326,13 @@ export default {
      */
     insertData(parentUri) {
       // 生成资源
-      let rd = utils_resource.generateResource(this._getLeafColumns(this.table.items))
+      let rd = utils_resource.generateResource(this._getLeafItems(this.table.items))
       // 初始化设置资源属性
-      utils_resource.setResourceProperties(rd, this._getLeafColumns(this.table.items))
+      utils_resource.setResourceProperties(rd, this._getLeafItems(this.table.items))
       // 设置资源的父
       utils_resource.setResourceParent(rd, parentUri)
       // 设置显示角色
-      this._setResourceDisplayValue(rd, this._getLeafColumns(this.table.items))
+      this._setResourceDisplayValue(rd, this._getLeafItems(this.table.items))
       // 设置单元格正在编辑状态
       utils_resource.setResourceEditingState(rd, true)
 
@@ -387,8 +386,9 @@ export default {
     },
     // 表行操作列点击详情事件
     __handleDetailButtonClicked(row, column, $index) {
+      var formProps = this._getLeafItems(this.detailForm.items)
       api_gda.listData(this.table.tableName,
-        this._getLeafColumns(this.detailForm.items),
+        formProps,
         [{
           fieldName: 'pk',
           editValue: row.uri,
@@ -396,7 +396,7 @@ export default {
         },],
       ).then((responseData) => {
         // 设置数据
-        this.detailFormData = responseData
+        this.detailFormData = utils_resource.setResource(responseData, formProps, this.table.parentUri)
         // 设置打开明细页
         this.listVisible = false
       }).catch((error) => {
@@ -436,7 +436,7 @@ export default {
           api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
             utils_resource.saveResources(this.tableData.rows, responseData)
             // 设置显示角色
-            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
+            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.table.items))
             // 设置资源的编辑状态
             utils_resource.setResourcesEditingState(this.tableData.rows, false)
             this.$message({ message: '保存成功', type: 'success' })
@@ -500,23 +500,6 @@ export default {
       } else {
         return ''
       }
-    },
-    __setTableColumnsLeafItems(items) {
-      var leaf = { index: 0 }
-      this.__setLeafItems(items, leaf)
-    },
-    __setLeafItems(items, leaf) {
-      if (!items || !leaf || leaf.index < 0) {
-        return
-      }
-      items.forEach(element => {
-        if (element.children && element.children.length > 0) {
-          this.__setLeafItems(element.children, leaf)
-        } else {
-          element.columnKey = leaf.index.toString()
-          leaf.index += 1
-        }
-      })
     },
     __getToolButtonGroup() {
       // 设置已有toolbuttongroup数据

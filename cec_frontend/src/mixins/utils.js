@@ -143,7 +143,7 @@ export default {
      *    // item
      * },]
      */
-    _getLeafColumns(items) {
+    _getLeafItems(items) {
       var retval = []
       this.__findLeafColumns(retval, items)
       return retval
@@ -157,6 +157,32 @@ export default {
           this.__findLeafColumns(leafList, element.children)
         } else {
           leafList.push(element)
+        }
+      })
+    },
+
+    /**
+     * 设置items每个叶子节点中的关键属性
+     * 1、增加itemKey
+     * 返回:
+     * [{
+     *    // item
+     * },]
+     */
+    _setLeafItems(items) {
+      var leaf = { index: 0 }
+      this.__doLeafItems(items, leaf)
+    },
+    __doLeafItems(items, leaf) {
+      if (!items || !leaf || leaf.index < 0) {
+        return
+      }
+      items.forEach(element => {
+        if (element.children && element.children.length > 0) {
+          this.__doLeafItems(element.children, leaf)
+        } else {
+          element.itemKey = leaf.index.toString()
+          leaf.index += 1
         }
       })
     },
