@@ -9,58 +9,86 @@
     :show-message='formUI.showMessage'
     :inline-message='formUI.inlineMessage'
     :status-icon='formUI.statusIcon'
-    :size='formUI.size'
-    :class="{centerForm: form.divType}">
-    <template v-if='form.divType'>
-      <template v-for='(item, itemIndex) in form.items'>
-        <!-- <div v-if="item.children && JSON.stringify(item.children) !='[]'"> -->
-
-        <div class="el-form_header">
-          {{item.titleName}}
-        </div>
-        <div>
+    :size='formUI.size'>
+    <!-- :class="{centerForm: form.divType}" -->
+    <template v-for='(item, itemIndex) in form.items'>
+      <template v-if='item.formVisible'>
+        <template v-if='item.children && item.children.length>0'>
+          <!-- 增加分组头部 -->
+          <div class="el-form_header">
+            {{ item.formItemUI.label }}
+          </div>
+          <!-- 增加分组内容 -->
           <template v-for='(child, childIndex) in item.children'>
-            <simple-form-item v-if='child.formVisible'
-              :key='childIndex'
-              :prop="'props.'+itemIndex+'.'+childIndex+'.editValue'"
-              :formItemUI='child.formItemUI'>
-              <template v-if="child.customType != null || child.customType"
-                :slot="'props.'+itemIndex+'.'+childIndex+'.editValue'">
-                <slot :name="child.customUI.componentName"></slot>
-              </template>
-              <DynamicEditor v-else
-                class="dynamicEditor"
-                :slot="'props.'+itemIndex+'.'+childIndex+'.editValue'"
-                :editorUI='child.editorUI'
-                :editorInfo='child'
-                :editorModel='formData.props[itemIndex][childIndex]'
-                @modelChanged='(val)=>{__handleFormDataModified(val, childIndex)}' />
-            </simple-form-item>
-          </template>
-        </div>
+            <el-form-item v-if='child.formVisible'
+              :prop="'props.'+child.itemKey+'.editValue'"
+              :label='child.formItemUI.label'
+              :label-width='child.formItemUI.labelWidth'
+              :required='child.formItemUI.required'
+              :rules='child.formItemUI.rules'
+              :error='child.formItemUI.error'
+              :show-message='child.formItemUI.showMessage'
+              :inline-message='child.formItemUI.inlineMessage'
+              :size='child.formItemUI.size'>
 
+              <!-- <template v-if="child.customType != null || child.customType"
+                :slot="'props.'+child.itemKey+'.editValue'">
+                <slot :name="child.customUI.componentName"></slot>
+              </template> -->
+              <!-- class="dynamicEditor" -->
+              <DynamicEditor :editorUI='child.editorUI'
+                :editorInfo='child'
+                :editorModel='formData.props[child.itemKey]'
+                @modelChanged='(val)=>{__handleFormDataModified(val, child.itemKey)}' />
+            </el-form-item>
+          </template>
+        </template>
+        <template v-else>
+          <el-form-item :key='itemIndex'
+            :prop="'props.'+itemIndex+'.editValue'"
+            :label='item.formItemUI.label'
+            :label-width='item.formItemUI.labelWidth'
+            :required='item.formItemUI.required'
+            :rules='item.formItemUI.rules'
+            :error='item.formItemUI.error'
+            :show-message='item.formItemUI.showMessage'
+            :inline-message='item.formItemUI.inlineMessage'
+            :size='item.formItemUI.size'>
+            <DynamicEditor :editorUI='item.editorUI'
+              :editorInfo='item'
+              :editorModel='formData.props[itemIndex]'
+              @modelChanged='(val)=>{__handleFormDataModified(val, itemIndex)}' />
+          </el-form-item>
+        </template>
       </template>
     </template>
-    <template v-else
+
+    <!-- <template v-else
       v-for='(item, index) in form.items'>
-      <simple-form-item v-if='item.formVisible'
+      <el-form-item v-if='item.formVisible'
         :key='index'
         :prop="'props.'+index+'.editValue'"
-        :formItemUI='item.formItemUI'>
+        :label='item.formItemUI.label'
+        :label-width='item.formItemUI.labelWidth'
+        :required='item.formItemUI.required'
+        :rules='item.formItemUI.rules'
+        :error='item.formItemUI.error'
+        :show-message='item.formItemUI.showMessage'
+        :inline-message='item.formItemUI.inlineMessage'
+        :size='item.formItemUI.size'>
         <DynamicEditor :slot="'props.'+index+'.editValue'"
           :editorUI='item.editorUI'
           :editorInfo='item'
           :editorModel='formData.props[index]'
           @modelChanged='(val)=>{__handleFormDataModified(val, index)}' />
-      </simple-form-item>
-    </template>
+      </el-form-item>
+    </template> -->
   </el-form>
 </template>
 
 <script>
 import * as utils_resource from '@/utils/resource'
 import utils from '@/mixins/utils'
-import SimpleFormItem from '@/components/Widgets/SimpleFormItem'
 import DynamicEditor from '@/components/Widgets/DynamicEditor'
 
 /**
@@ -68,7 +96,7 @@ import DynamicEditor from '@/components/Widgets/DynamicEditor'
  */
 export default {
   name: 'SimpleForm',
-  components: { DynamicEditor, SimpleFormItem },
+  components: { DynamicEditor },
   mixins: [utils],
   // model: {
   //   prop: 'formModel',
@@ -83,7 +111,6 @@ export default {
       type: Object,
       default: function () { return {} },
     },
-
     /**
      * 
       {
@@ -102,8 +129,10 @@ export default {
             // 3、可选 表单内表单项控件对象
             DynamicEditor控件的editorInfo的多个属性内容，参见DynamicEditor.editorInfo
 
-            // 4、可选 孩子
+            // 4、可选 孩子,目前只支持一层孩子，总共两层
             children:[{}],
+            // itemKey此字段SimpleForm初始化时自动生成
+            // itemKey: 'xxx',             
           },{
             ...
         }],
@@ -127,7 +156,7 @@ export default {
       tempFormData = JSON.parse(JSON.stringify(this.formModel))
     } else {
       tempFormData = {
-        props: utils_resource.generateProperties(this._getLeafColumns(this.form.items))
+        props: utils_resource.generateProperties(this._getLeafItems(this.form.items))
       }
     }
     return {
@@ -136,6 +165,45 @@ export default {
       */
       formData: tempFormData,
     }
+  },
+  created() {
+    this._setLeafItems(this.form.items)
+  },
+  methods: {
+    /**
+     * 清除表单数据
+     */
+    reset() {
+      // 清除数据
+      var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.form.items))
+      this.formData = { props: tempFormData }
+      // 清除界面
+      this.$refs.elForm.resetFields()
+    },
+    /**
+     * 获取表单数据
+     */
+    getFormData() {
+      return JSON.parse(JSON.stringify(this.formData.props))
+    },
+
+    __handleFormDataModified(val, index) {
+      this.formData.props[index] = val
+      /**
+       * form表单中得到改变的值.
+       *
+       * @event modelChanged
+       * @type {object}
+       */
+      this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
+    }
+    // keyEvent(ev, v) {
+    //   if (ev.keyCode == 13) {
+    //     this.$refs[v].$el.querySelector('input').focus()
+    //   } else if (ev.keyCode == 112) {
+    //     this.saveData()
+    //   }
+    // }
   },
   watch: {
     // // 外界数据被修改，直接深拷贝数据，暂时先写成JSON形式转换
@@ -159,46 +227,6 @@ export default {
     //   deep: true,
     // }
   },
-  methods: {
-    /**
-     * 清除表单数据
-     */
-    reset() {
-      // 清除数据
-      var tempFormData = utils_resource.generateProperties(this._getLeafColumns(this.form.items))
-      this.formData = { props: tempFormData }
-      // 清除界面
-      this.$refs.elForm.resetFields()
-    },
-
-    /**
-     * 获取表单数据
-     */
-    getFormData() {
-      return JSON.parse(JSON.stringify(this.formData.props))
-    },
-
-    __handleFormDataModified(val, index) {
-      this.formData.props[index] = val
-      /**
-       * form表单中得到改变的值.
-       *
-       * @event modelChanged
-       * @type {object}
-       */
-      this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
-    }
-
-
-    // keyEvent(ev, v) {
-    //   if (ev.keyCode == 13) {
-    //     this.$refs[v].$el.querySelector('input').focus()
-    //   } else if (ev.keyCode == 112) {
-    //     this.saveData()
-    //   }
-    // }
-  },
-
 }
 </script>
 <style scoped>
@@ -213,11 +241,7 @@ export default {
   margin-bottom: 10px;
 }
 .centerForm {
-  margin: 0 auto;
-  width: 35%;
-}
-.dynamicEditor {
-  width: 100%;
-  padding: 0px;
+  margin: 0 auto 0 0;
+  width: 50%;
 }
 </style>

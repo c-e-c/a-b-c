@@ -395,8 +395,8 @@ export default {
           comparison: 'exact',
         },],
       ).then((responseData) => {
-        // 设置数据
-        this.detailFormData = utils_resource.setResource(responseData, formProps, this.table.parentUri)
+        // 设置数据,返回一条数据
+        this.detailFormData = utils_resource.setResource(responseData[0], formProps, this.table.parentUri)
         // 设置打开明细页
         this.listVisible = false
       }).catch((error) => {

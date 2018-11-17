@@ -59,20 +59,21 @@
     :filtered-value='columnUI.filteredValue'>
 
     <template slot-scope='{ row, column, $index }'>
-      <template v-if='row.props && row.props[column.itemKey]'>
-        <template v-if='row.props[column.itemKey].editing'>
-          <el-form-item :prop="'rows.'+$index+'.props.'+column.itemKey+'.editValue'"
+      <!-- {{ __test(row, column, $index) }} -->
+      <template v-if='row.props && row.props[column.columnKey]'>
+        <template v-if='row.props[column.columnKey].editing'>
+          <el-form-item :prop="'rows.'+$index+'.props.'+column.columnKey+'.editValue'"
             label=''
             :rules="column.rules?column.rules:[]"
             size='mini'>
             <DynamicEditor :editorUI='column.editorUI'
               :editorInfo='column.editorInfo'
-              :editorModel='row.props[column.itemKey]'
-              @modelChanged='(val)=>{__handleTableCellModified(row, column.itemKey, val)}' />
+              :editorModel='row.props[column.columnKey]'
+              @modelChanged='(val)=>{__handleTableCellModified(row, column.columnKey, val)}' />
           </el-form-item>
         </template>
         <template v-else>
-          <span> {{ row.props[column.itemKey].displayValue }} </span>
+          <span> {{ row.props[column.columnKey].displayValue }} </span>
         </template>
       </template>
       <template v-else>
@@ -121,6 +122,9 @@ export default {
   methods: {
     __handleTableCellModified(rd, index, prop) {
       utils_resource.modifyResource(rd, index, prop)
+    },
+    __test(row, column, $index) {
+      console.log(test)
     },
   }
 }

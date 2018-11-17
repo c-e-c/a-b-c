@@ -97,8 +97,12 @@ export default {
                 trigger: 'blur',
               },
             ],
-
           }, {
+            // columnVisible: true,
+            // columnUI: {
+            //   label: '其它',
+            // },
+            // children: [{
             fieldName: 'remark',
             columnVisible: true,
             editable: true,
@@ -115,7 +119,7 @@ export default {
             columnUI: {
               label: '排序号',
             },
-
+            // }]
           }, {
             fieldName: 'valid_flag',
             columnVisible: true,
