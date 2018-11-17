@@ -107,9 +107,8 @@ class CommonRetrieveModelMixin(mixins.RetrieveModelMixin):
                 'props': ['列名xxx', ],
             }
         """
-        params = request.query_params
         # 设置queryset
-        params = self.request.query_params
+        params = request.query_params
         tableName = params.get("type")
         serializerName = tableName + "Serializer"
 
@@ -120,7 +119,7 @@ class CommonRetrieveModelMixin(mixins.RetrieveModelMixin):
         serializerName = tableName + "Serializer"
         self.serializer_class = serializerClass(serializerName)
 
-        return super(CommonViewSet, self).retrieve(request, *args, **kwargs)
+        return super(CommonRetrieveModelMixin, self).retrieve(request, *args, **kwargs)
 
 
 class CommonCreateModelMixin(mixins.CreateModelMixin):

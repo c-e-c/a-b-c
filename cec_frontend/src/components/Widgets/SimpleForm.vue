@@ -132,18 +132,20 @@ export default {
       type: Object,
       required: true,
     },
+    /**
+     * formmodel数据，参见资源描述对象
+     */
+    formModel: {
+      type: Array,
+      default: function () { return [] },
+    },
   },
   data: function () {
-    //        var tempFormData = utils_resource.generateProperties(this.form.items)
-    if (this.form.divType) {
-      var tempFormData = []
-      this.form.items.forEach(element => {
-        if (element.children && JSON.stringify(element.children) != '[]') {
-          tempFormData.push(utils_resource.generateProperties(element.children))
-        }
-      })
+    var tempFormData = []
+    if (this.formModel && this.formModel.length !== 0) {
+      tempFormData = JSON.parse(JSON.stringify(this.formModel))
     } else {
-      var tempFormData = utils_resource.generateProperties(this.form.items)
+      tempFormData = utils_resource.generateProperties(this._getLeafColumns(this.form.items))
     }
 
     return {
@@ -181,7 +183,7 @@ export default {
      */
     reset() {
       // 清除数据
-      var tempFormData = utils_resource.generateProperties(this.form.items)
+      var tempFormData = utils_resource.generateProperties(this._getLeafColumns(this.form.items))
       this.formData = { props: tempFormData }
       // 清除界面
       this.$refs.elForm.resetFields()

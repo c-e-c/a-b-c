@@ -16,7 +16,7 @@
         :tableFilter='tableFilter'
         :tableUI='tableUI'
         :table='table'
-        :toolButtonGroup='toolButtonGroup'
+        :defaultToolButtonGroup='defaultToolButtonGroup'
         @tableDataSaved='__queryTreeData' />
     </el-main>
   </el-container>
@@ -130,11 +130,12 @@ export default {
   },
   data() {
     return {
-      toolButtonGroup: [
+      defaultToolButtonGroup: [
         {
           uri: 'search',
           click: this.__queryTableData,
-        }, {
+        },
+        {
           uri: 'add',
           click: this.__insertTableData,
         },
@@ -163,7 +164,7 @@ export default {
       }
 
       // 表
-      var filters = this.$refs.simpleTable.getFormData()
+      var filters = this.$refs.simpleTable.getFilterFormData()
       utils_resource.addProperty(filters, { fieldName: this.tableAssoProp, editValue: currentTreeNodeUri, comparison })
       this.$refs.simpleTable.fetchData(filters)
     },

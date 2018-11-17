@@ -153,7 +153,7 @@ export default {
         return
       }
       items.forEach(element => {
-        if (element.hasChildren) {
+        if (element.children && element.children.length > 0) {
           this.__findLeafColumns(leafList, element.children)
         } else {
           leafList.push(element)

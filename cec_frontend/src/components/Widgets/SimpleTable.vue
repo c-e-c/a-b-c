@@ -1,9 +1,10 @@
 <template>
-  <div class='simpletable'>
+  <div v-if='listVisible'
+    class='simpletable'>
     <!-- 工具栏按钮 -->
     <SimpleButtonGroup ref='simpleButtonGroup'
       class='simplebuttongroup'
-      :buttonGroup='__toolButtonGroupData' />
+      :buttonGroup='toolButtonGroupData' />
     <!-- 查询条件 -->
     <SimpleForm v-if='tableFilterVisible'
       ref='simpleFilter'
@@ -12,7 +13,7 @@
       :form='tableFilter' />
     <!-- 表 -->
     <el-form ref='elForm'
-      :model='__tableData'
+      :model='tableData'
       inlineMessage>
       <el-table ref='elTable'
         :height='tableUI.height'
@@ -43,7 +44,7 @@
         :sum-text='tableUI.sumText'
         :summary-method='tableUI.summaryMethod'
         :span-method='tableUI.spanMethod'
-        :data='__tableData.rows'
+        :data='tableData.rows'
         @selection-change='__handleTableSelectionChanged'>
         <!-- <el-table-column type='expand' fixed>
           <template slot-scope='props'>
@@ -77,19 +78,21 @@
           align='center'>
           <template slot-scope='{ row, column, $index }'>
             <el-form-item size='mini'>
-              <el-button :size='detailOperatingButton.size'
-                :type='detailOperatingButton.type'
-                :plain='detailOperatingButton.plain'
-                :round='detailOperatingButton.round'
-                :loading='detailOperatingButton.loading'
-                :disabled='detailOperatingButton.disabled'
-                :icon='detailOperatingButton.icon'
-                :autofocus='detailOperatingButton.autofocus'
-                :native-type='detailOperatingButton.nativeType'
+              <el-button v-if='detailOperatingButton.visible'
+                :size='detailOperatingButton.buttonUI.size'
+                :type='detailOperatingButton.buttonUI.type'
+                :plain='detailOperatingButton.buttonUI.plain'
+                :round='detailOperatingButton.buttonUI.round'
+                :loading='detailOperatingButton.buttonUI.loading'
+                :disabled='detailOperatingButton.buttonUI.disabled'
+                :icon='detailOperatingButton.buttonUI.icon'
+                :autofocus='detailOperatingButton.buttonUI.autofocus'
+                :native-type='detailOperatingButton.buttonUI.nativeType'
                 @click='__handleDetailButtonClicked(row,column,$index)'>
-                {{detailOperatingButton.name}}</el-button>
+                {{detailOperatingButton.name}}
+              </el-button>
 
-              <slot name='operating_column'
+              <slot name='simpletable_operating_column'
                 :row='row'
                 :column='column'
                 :$index='$index'></slot>
@@ -106,6 +109,11 @@
       :changeCurrentPage='__handlePaginationCurrentChanged'>
     </SimplePagination>
   </div>
+  <SimpleTableDetail v-else
+    :detailForm='detailForm'
+    :detailFormModel='detailFormData'
+    @detailReturnClicked='()=>listVisible=true'>
+  </SimpleTableDetail>
 </template>
 
 <script>
@@ -117,6 +125,7 @@ import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
 import SimpleTableColumn from '@/components/Widgets/SimpleTableColumn'
 import SimpleForm from '@/components/Widgets/SimpleForm'
 import SimplePagination from '@/components/Widgets/SimplePagination'
+import SimpleTableDetail from '@/components/Widgets/SimpleTableDetail'
 
 export default {
   name: 'SimpleTable',
@@ -125,6 +134,7 @@ export default {
     SimpleTableColumn,
     SimpleForm,
     SimplePagination,
+    SimpleTableDetail,
   },
   mixins: [utils],
   props: {
@@ -188,8 +198,7 @@ export default {
             // 3、单元格控件对象     // 可选
             DynamicEditor控件的editorInfo的多个属性内容，参见DynamicEditor.editorInfo
 
-            // 4、可选 item的孩子,数组中为多个子item对象，当有hasChildren为true时，DynamicEditor属性无效
-            hasChildren: false, 
+            // 4、可选 item的孩子,数组中为多个子item对象，当有孩子时时，DynamicEditor属性无效
             children:[{},],
             // columnKey此字段SimpleTable初始化时自动生成
             // columnKey: 'xxx', 
@@ -205,8 +214,7 @@ export default {
     /**
      * 要替换的工具按钮组，已有按钮组，包含uri：search,add,remove,save,print,import,export
      * 这些可以被替代默认设置，也可以自定义值，
-      [
-        [ // 分组
+        [
           {
             uri:'xxx'          // xxx为按钮唯一标示uri
             click:'',          // click为点击事件
@@ -215,11 +223,9 @@ export default {
               // 参见element-ui el-button的属性
             },
           },...
-        ],
-        ...
-      ]
+        ]
      */
-    toolButtonGroup: {
+    defaultToolButtonGroup: {
       type: Array,
       default: function () { return [] },
     },
@@ -228,6 +234,7 @@ export default {
      * 详情操作按钮
         {
           name:'',           // name为按钮名字
+          visible: true      // 是否可视
           buttonUI:{
             // 参见element-ui el-button的属性
           },
@@ -238,6 +245,7 @@ export default {
       default: function () {
         return {
           name: '详情',
+          visible: true,
           buttonUI: {
             type: 'text',
             size: 'mini',
@@ -245,16 +253,26 @@ export default {
         }
       },
     },
+    /**
+     * 详情form数据,参见SimpleForm的form属性
+     */
+    detailForm: {
+      type: Object,
+      default: function () { return {} }
+    }
   },
   data: function () {
     return {
       // 工具按钮组
-      __toolButtonGroupData: this.__getToolButtonGroup(),
-
+      toolButtonGroupData: this.__getToolButtonGroup(),
       // 表数据
-      __tableData: {
+      tableData: {
         rows: [],// 资源描述序列
       },
+      // 是否显示列表或者明细
+      listVisible: true,
+      // 表明细数据
+      detailFormData: null,
     }
   },
   created() {
@@ -272,7 +290,7 @@ export default {
     /**
      * 得到过滤器数据
      */
-    getFormData() {
+    getFilterFormData() {
       return this.$refs.simpleFilter.getFormData()
     },
     /**
@@ -287,15 +305,15 @@ export default {
       ).then((responseData) => {
         if (responseData.results) {
           // 生成分页数据
-          this.__tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
+          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         } else {
           // 生成不分页数据
-          this.__tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
+          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafColumns(this.table.items),
             this.table.parentUri)
         }
         // 设置显示角色
-        this._setResourcesDisplayValue(this.__tableData.rows, this._getLeafColumns(this.table.items))
+        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
         // 设置分页
         this.$refs.simplePagination.setPageTotal(responseData.count)
 
@@ -320,7 +338,7 @@ export default {
       utils_resource.setResourceEditingState(rd, true)
 
       // 插入一条资源
-      utils_resource.addResource(this.__tableData.rows, rd)
+      utils_resource.addResource(this.tableData.rows, rd)
     },
     /**
      * 校验单元格的唯一性 
@@ -331,11 +349,11 @@ export default {
       var rowIndex = rule.field.split('.')[1]   // rows.x.props.y.editValue
       var fieldIndex = rule.field.split('.')[3]  // rows.x.props.y.editValue
       // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
-      var state = utils_resource.getResourceDifferenceState(this.__tableData.rows[rowIndex])
+      var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
       if (state === 'ROW_ADDED') {
         this._validateUnique(rule, value, callback,
           this.table.tableName,
-          this.__tableData.rows[rowIndex].props[fieldIndex].fieldName)
+          this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
       } else {
         callback()
       }
@@ -365,29 +383,40 @@ export default {
     },
     // 表行的选择列被改变事件
     __handleTableSelectionChanged(selection) {
-      utils_resource.setResourcesSelectedState(this.__tableData.rows, selection)
+      utils_resource.setResourcesSelectedState(this.tableData.rows, selection)
     },
-    // 点击详情按钮
+    // 表行操作列点击详情事件
     __handleDetailButtonClicked(row, column, $index) {
-      /**
-       * 某条表记录的详情按钮被点击
-       * @event tableRecordDetailClicked
-       */
-      this.$emit('tableRecordDetailClicked')
+      api_gda.listData(this.table.tableName,
+        this._getLeafColumns(this.detailForm.items),
+        [{
+          fieldName: 'pk',
+          editValue: row.uri,
+          comparison: 'exact',
+        },],
+      ).then((responseData) => {
+        // 设置数据
+        this.detailFormData = responseData
+        // 设置打开明细页
+        this.listVisible = false
+      }).catch((error) => {
+        // 设置界面
+        utils_ui.showErrorMessage(error)
+      })
     },
     // 点击修改按钮
     __handleModifyButtonClicked() {
-      utils_resource.setResourcesEditingState(this.__tableData.rows, true)
+      utils_resource.setResourcesEditingState(this.tableData.rows, true)
     },
     // 点击删除按钮
     __handleDeleteButtonClicked() {
-      if (!utils_resource.hasResourcesSelected(this.__tableData.rows)) {
+      if (!utils_resource.hasResourcesSelected(this.tableData.rows)) {
         this.$message({ message: '请选择要删除的记录', type: 'warning' })
         return
       }
       this.$confirm('确认要删除已选的记录吗?', '提示', { type: 'warning' }
       ).then(() => {
-        utils_resource.removeResources(this.__tableData.rows)
+        utils_resource.removeResources(this.tableData.rows)
       }).catch(() => {
         this.$message({ message: '取消删除', type: 'info' })
       })
@@ -398,18 +427,18 @@ export default {
       this.$refs.elForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
-          var diffModel = utils_resource.getDifferenceModel(this.__tableData)
+          var diffModel = utils_resource.getDifferenceModel(this.tableData)
           if (!diffModel) {
             // 设置资源的编辑状态
-            utils_resource.setResourcesEditingState(this.__tableData.rows, false)
+            utils_resource.setResourcesEditingState(this.tableData.rows, false)
             return
           }
           api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
-            utils_resource.saveResources(this.__tableData.rows, responseData)
+            utils_resource.saveResources(this.tableData.rows, responseData)
             // 设置显示角色
-            this._setResourcesDisplayValue(this.__tableData.rows, this._getLeafColumns(this.table.items))
+            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafColumns(this.table.items))
             // 设置资源的编辑状态
-            utils_resource.setResourcesEditingState(this.__tableData.rows, false)
+            utils_resource.setResourcesEditingState(this.tableData.rows, false)
             this.$message({ message: '保存成功', type: 'success' })
             /**
              * 表保存后
@@ -481,7 +510,7 @@ export default {
         return
       }
       items.forEach(element => {
-        if (element.hasChildren) {
+        if (element.children && element.children.length > 0) {
           this.__setLeafItems(element.children, leaf)
         } else {
           element.columnKey = leaf.index.toString()
@@ -491,8 +520,7 @@ export default {
     },
     __getToolButtonGroup() {
       // 设置已有toolbuttongroup数据
-      var tempToolButtonGroup = null
-      var defaultToolButtonGroup = [
+      var tempToolButtonGroup = [
         [
           {
             uri: 'search',
@@ -598,21 +626,14 @@ export default {
           },
         ]
       ]
-      if (!this.toolButtonGroup || this.toolButtonGroup.length === 0) {
-        tempToolButtonGroup = defaultToolButtonGroup
-      } else {
-        tempToolButtonGroup = this.toolButtonGroup
-        tempToolButtonGroup.forEach(group => {
-          group.forEach(button => {
-            var tempButton = null
-            tempButton = this.__findButtonGroup(defaultToolButtonGroup, button.uri)
-            if (tempButton) {
-              Object.keys(button).forEach(prop => {
-                tempButton[prop] = button[prop]
-              })
-            }
-            button = tempButton
-          })
+      if (this.defaultToolButtonGroup && this.defaultToolButtonGroup.length !== 0) {
+        this.defaultToolButtonGroup.forEach(button => {
+          var tempButton = this.__findButtonGroup(tempToolButtonGroup, button.uri)
+          if (tempButton) {
+            Object.keys(button).forEach(prop => {
+              tempButton[prop] = button[prop]
+            })
+          }
         })
       }
       return tempToolButtonGroup

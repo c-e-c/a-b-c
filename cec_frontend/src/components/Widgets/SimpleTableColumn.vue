@@ -1,5 +1,5 @@
 <template>
-  <el-table-column v-if='column.hasChildren'
+  <el-table-column v-if='column.children && column.children.length>0'
     :type='columnUI.type'
     :index='columnUI.index'
     :column-key='column.columnKey'

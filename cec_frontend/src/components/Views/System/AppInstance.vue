@@ -164,7 +164,7 @@ export default {
 
       api_gda.multilistData(listdata).then((responseData) => {
         //// 过滤条件
-        var filterAppModule = this.tableFilter.items.find(item => { return item.fieldName === 'app_module' })
+        var filterAppModule = this._getLeafColumns(this.tableFilter.items).find(item => { return item.fieldName === 'app_module' })
         if (filterAppModule) {
           this._setDropdown(responseData['app_module'], filterAppModule.selectOptions[0].options)
         }

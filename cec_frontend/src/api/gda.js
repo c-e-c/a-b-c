@@ -107,6 +107,26 @@ export function multilistData(multilist) {
   })
 }
 
+// 获取一条数据
+export function retrieveData(tableName, id, props) {
+  // 属性
+  var columns = []
+  props.forEach(prop => {
+    if (prop.fieldName) {
+      columns.push(prop.fieldName)
+    }
+  })
+  return fetch2({
+    baseURL: 'http://127.0.0.1:8000',
+    url: model_url_mapping[tableName] + '/' + id + '/',
+    method: 'get',
+    params: {
+      type: tableName,
+      props: JSON.stringify(columns),
+    },
+  })
+}
+
 // export function getPageSize() {
 //   return fetch2({
 //     baseURL: 'http://127.0.0.1:8000',
@@ -141,23 +161,6 @@ export function multilistData(multilist) {
 // // export function createAndFetchData(tableName, rd, columns, filters, pageSize, offset) {
 // //   return axios.all([createData(tableName, rd), listData(tableName, columns, filters, pageSize, offset)])
 // // }
-
-// // 获取一条数据
-// export function retrieveData(uri, id, cols) {
-//   var index = uri.lastIndexOf('/')
-//   var tableName = uri.substring(index + 1, uri.length)
-//   var tableUri = uri.substring(0, index)
-
-//   return fetch2({
-//     baseURL: 'http://127.0.0.1:8000',
-//     url: tableUri + '/' + id + '/',
-//     method: 'get',
-//     params: {
-//       type: tableName,
-//       columns: cols,
-//     },
-//   })
-// }
 
 // // 局部更新一条数据
 // export function partialUpdateData(uri, id, rd) {
