@@ -1,6 +1,6 @@
 <template>
   <el-form ref='elForm'
-    :class="{centerForm:!formUI.inline}"
+    :class='formUI.class'
     :model='formData'
     :rules='formUI.rules'
     :inline='formUI.inline'
@@ -237,8 +237,5 @@ export default {
   line-height: 50px;
   border-bottom: 1px solid #abb2c7;
   margin-bottom: 10px;
-}
-.centerForm {
-  margin: 0 auto; /*0 0;*/
 }
 </style>
