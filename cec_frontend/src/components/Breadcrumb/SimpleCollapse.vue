@@ -35,7 +35,7 @@
 
 <script>
 import * as utils_resource from '@/utils/resource'
-import SimpleFormItem from '@/components/Widgets/SimpleFormItem'
+import SimpleFormItem from '@/components/Breadcrumb/SimpleFormItem'
 import DynamicEditor from '@/components/Widgets/DynamicEditor'
 
 /**

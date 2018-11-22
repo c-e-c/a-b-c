@@ -2,20 +2,18 @@
   <div>
     <SimpleButtonGroup class='simplebuttongroup'
       :buttonGroup='toolButtonGroupData' />
-    <SimpleForm ref='elForm'
-      class='simpleform'
-      :formUI='detailFormUI'
-      :form='detailForm'
-      :formModel='detailFormModel'>
-      <!-- <template v-for='(item, index) in collapse.items'>
-        <template v-for='(child, ind) in item.children'>
-          <el-transfer v-if="child.customType"
-            :slot="child.customUI.componentName"
-            v-model="child.customUI.value1"
-            :data="child.customUI.data"></el-transfer>
-        </template>
-      </template> -->
-    </SimpleForm>
+    <template v-if='detailStyle === collapsestyle'>
+
+    </template>
+    <template v-else>
+      <SimpleForm ref='elForm'
+        class='simpleform'
+        :formUI='detailFormUI'
+        :form='detailForm'
+        :formModel='detailFormModel'>
+      </SimpleForm>
+    </template>
+    <slot name='customdetail' />
   </div>
 </template>
 
@@ -24,10 +22,8 @@ import * as api_gda from '@/api/gda'
 import * as utils_resource from '@/utils/resource'
 import * as utils_ui from '@/utils/ui'
 //import utils from '@/mixins/utils'
-import SimpleForm from '@/components/Widgets/SimpleForm'
 import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
-
-// import SimpleCollapse from '@/components/Widgets/SimpleCollapse'
+import SimpleForm from '@/components/Widgets/SimpleForm'
 
 export default {
   name: 'SimpleTableDetail',
@@ -35,9 +31,16 @@ export default {
   components: {
     SimpleForm,
     SimpleButtonGroup,
-    // SimpleCollapse,
   },
   props: {
+    /**
+     * 明细样式：包含formstyle,collapsestyle。默认为form
+     */
+    detailStyle: {
+      type: String,
+      default: 'formstyle'
+    },
+
     /**
      * 详情formUI数据,参见SimpleForm的formUI属性
      */

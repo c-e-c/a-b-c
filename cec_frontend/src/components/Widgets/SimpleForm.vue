@@ -30,12 +30,6 @@
               :show-message='child.formItemUI.showMessage'
               :inline-message='child.formItemUI.inlineMessage'
               :size='child.formItemUI.size'>
-
-              <!-- <template v-if="child.customType != null || child.customType"
-                :slot="'props.'+child.itemKey+'.editValue'">
-                <slot :name="child.customUI.componentName"></slot>
-              </template> -->
-              <!-- class="dynamicEditor" -->
               <DynamicEditor :editorUI='child.editorUI'
                 :editorInfo='child'
                 :editorModel='formData.props[child.itemKey]'
