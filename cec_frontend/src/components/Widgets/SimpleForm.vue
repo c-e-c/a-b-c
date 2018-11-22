@@ -134,7 +134,7 @@ export default {
      */
     form: {
       type: Object,
-      required: true,
+      default: function () { return {} },
     },
     /**
      * formmodel数据，参见资源描述对象
@@ -234,7 +234,7 @@ export default {
 </script>
 <style scoped>
 .el-form_header {
-  line-height: 48px;
+  line-height: 50px;
   border-bottom: 1px solid #abb2c7;
   margin-bottom: 10px;
 }

@@ -204,7 +204,7 @@ export default {
   padding: 5px 10px 5px 10px;
 }
 .simpleform {
-  padding: 5px 10px 5px 10px;
+  padding: 0px 10px 0px 10px;
 }
 </style>
 
