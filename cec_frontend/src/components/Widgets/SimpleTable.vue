@@ -110,8 +110,10 @@
     </SimplePagination>
   </div>
   <SimpleTableDetail v-else
+    :detailFormUI='detailFormUI'
     :detailForm='detailForm'
     :detailFormModel='detailFormData'
+    :defaultDetailToolButtonGroup='defaultDetailToolButtonGroup'
     @detailReturnClicked='()=>listVisible=true'>
   </SimpleTableDetail>
 </template>
@@ -238,6 +240,7 @@ export default {
           buttonUI:{
             // 参见element-ui el-button的属性
           },
+          click:'',          // click为点击事件
         }
      */
     detailOperatingButton: {
@@ -254,12 +257,37 @@ export default {
       },
     },
     /**
+     * 详情formUI数据,参见SimpleForm的formUI属性
+     */
+    detailFormUI: {
+      type: Object,
+      default: function () { return {} }
+    },
+    /**
      * 详情form数据,参见SimpleForm的form属性
      */
     detailForm: {
       type: Object,
       default: function () { return {} }
-    }
+    },
+    /**
+     * 要替换的默认详情按钮组，已有按钮组，包含uri: return,save
+     * 这些可以被替代默认设置，也可以自定义值，
+        [
+          {
+            uri:'xxx'          // xxx为按钮唯一标示uri
+            click:'',          // click为点击事件
+            name:'',           // name为按钮名字
+            buttonUI:{
+              // 参见element-ui el-button的属性
+            },
+          },...
+        ]
+     */
+    defaultDetailToolButtonGroup: {
+      type: Array,
+      default: function () { return [] }
+    },
   },
   data: function () {
     return {
@@ -287,10 +315,10 @@ export default {
   },
   methods: {
     /**
-     * 得到过滤器数据
+     * 得到过滤器资源数据
      */
-    getFilterFormData() {
-      return this.$refs.simpleFilter.getFormData()
+    getFilterFormProps() {
+      return this.$refs.simpleFilter.getFormProps()
     },
     /**
      * 查询过滤条件的数据，offset默认从第0页分页
@@ -360,17 +388,17 @@ export default {
     // 点击查询按钮
     __handleSearchButtonClicked() {
       let offset = (this.$refs.simplePagination.getCurrentPage() - 1) * this.$refs.simplePagination.getPageSize()
-      this.fetchData(this.$refs.simpleFilter.getFormData(), offset)
+      this.fetchData(this.$refs.simpleFilter.getFormProps(), offset)
     },
     // 处理分页SizeChange事件
     __handlePaginationSizeChanged(size) {
       this.$refs.simplePagination.setPageSize(size)
-      this.fetchData(this.$refs.simpleFilter.getFormData(), 0)
+      this.fetchData(this.$refs.simpleFilter.getFormProps(), 0)
     },
     // 处理分页CurrentChange事件
     __handlePaginationCurrentChanged(currentPage) {
       let offset = (currentPage - 1) * this.$refs.simplePagination.getPageSize()
-      this.fetchData(this.$refs.simpleFilter.getFormData(), offset)
+      this.fetchData(this.$refs.simpleFilter.getFormProps(), offset)
     },
     // 点击增加按钮
     __handleAddButtonClicked() {

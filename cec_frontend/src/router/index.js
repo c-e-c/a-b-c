@@ -91,19 +91,20 @@ export const constantRouterMap = [
             path: 'account',
             component: Account,
             name: '账号管理',
-            // children: [
-            // {
-            //   path: 'accountdetail',
-            //   component: AccountDetail,
-            //   name: '账号明细',
-            //   meta: {
-            //     icon: 'el-icon-edit',
-            //     openmode: '0', // 0为原始，1为新开tab，2为新开窗口
-            //   },
-            // },
-            // ],
+            children: [
+              {
+                path: 'accountdetail',
+                component: AccountDetail,
+                name: '账号明细',
+                meta: {
+                  icon: 'el-icon-edit',
+                  openmode: 'current', // current为当前，newtab为新开tab，newwindow为新开窗口
+                },
+              },
+            ],
             meta: {
               icon: 'el-icon-edit',
+              leaf: true,
             },
           },
           {

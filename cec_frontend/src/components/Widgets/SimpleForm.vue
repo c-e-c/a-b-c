@@ -46,14 +46,14 @@
         <template v-else>
           <el-form-item :key='itemIndex'
             :prop="'props.'+itemIndex+'.editValue'"
-            :label='item.formItemUI.label'
-            :label-width='item.formItemUI.labelWidth'
-            :required='item.formItemUI.required'
-            :rules='item.formItemUI.rules'
-            :error='item.formItemUI.error'
-            :show-message='item.formItemUI.showMessage'
-            :inline-message='item.formItemUI.inlineMessage'
-            :size='item.formItemUI.size'>
+            :label='item.formItemUI?item.formItemUI.label:undefined'
+            :label-width='item.formItemUI?item.formItemUI.labelWidth:undefined'
+            :required='item.formItemUI?item.formItemUI.required:undefined'
+            :rules='item.formItemUI?item.formItemUI.rules:undefined'
+            :error='item.formItemUI?item.formItemUI.error:undefined'
+            :show-message='item.formItemUI?item.formItemUI.showMessage:undefined'
+            :inline-message='item.formItemUI?item.formItemUI.inlineMessage:undefined'
+            :size='item.formItemUI?item.formItemUI.size:undefined'>
             <DynamicEditor :editorUI='item.editorUI'
               :editorInfo='item'
               :editorModel='formData.props[itemIndex]'
@@ -176,15 +176,24 @@ export default {
     reset() {
       // 清除数据
       var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.form.items))
-      this.formData = { props: tempFormData }
+      this.formData = {
+        props: tempFormData
+      }
       // 清除界面
       this.$refs.elForm.resetFields()
     },
     /**
      * 获取表单数据
      */
-    getFormData() {
+    getFormProps() {
       return JSON.parse(JSON.stringify(this.formData.props))
+    },
+
+    /**
+     * 获取表单资源数据
+     */
+    getFormResData() {
+      return JSON.parse(JSON.stringify(this.formData))
     },
 
     __handleFormDataModified(val, index) {

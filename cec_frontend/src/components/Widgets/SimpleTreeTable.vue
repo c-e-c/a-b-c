@@ -163,8 +163,8 @@ export default {
         comparison = 'isnull'
       }
 
-      // 表
-      var filters = this.$refs.simpleTable.getFilterFormData()
+      // 表 todo改造
+      var filters = this.$refs.simpleTable.getFilterFormProps()
       utils_resource.addProperty(filters, { fieldName: this.tableAssoProp, editValue: currentTreeNodeUri, comparison })
       this.$refs.simpleTable.fetchData(filters)
     },

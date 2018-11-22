@@ -127,7 +127,7 @@ export default {
 		/**
 		 * 获取表单数据
 		 */
-    getFormData() {
+    getFormProps() {
       return JSON.parse(JSON.stringify(this.formData.props))
     },
 

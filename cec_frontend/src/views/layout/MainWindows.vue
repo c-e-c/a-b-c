@@ -181,14 +181,15 @@ export default {
   },
   watch: {
     '$route'(to, from) {
-      // if (to.meta.openmode === 'noopen') {
+      if (to.meta.openmode === 'current') {
 
-      // } else {
-      this.addMenuTab(to.name)
-      //}
+      } else if (to.meta.openmode === 'newwindow') {
+
+      } else {
+        this.addMenuTab(to.name)
+      }
     }
   },
-
 }
 </script>
 

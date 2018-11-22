@@ -1,6 +1,6 @@
 <template>
   <!--当router有孩子的时候-->
-  <el-submenu v-if='router.children'
+  <el-submenu v-if='router.children && router.meta.leaf !==true'
     :key='router.name'
     :index='routerData+router.path'>
     <template slot='title'>

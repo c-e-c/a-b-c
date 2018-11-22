@@ -5,7 +5,8 @@
     <el-button @click="handleClick()"
       type="primary">保存</el-button>
 
-    <SimpleForm :form='detailForm'
+    <SimpleForm :formUI='detailFormUI'
+      :form='detailForm'
       :formModel='detailFormModel'>
       <!-- <template v-for='(item, index) in collapse.items'>
         <template v-for='(child, ind) in item.children'>
@@ -29,6 +30,10 @@ export default {
   //mixins: [utils],
   components: { SimpleForm, SimpleCollapse },
   props: {
+    detailFormUI: {
+      type: Object,
+      default: function () { return {} },
+    },
     detailForm: {
       type: Object,
       default: function () { return {} },
