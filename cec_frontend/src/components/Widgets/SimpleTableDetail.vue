@@ -1,11 +1,10 @@
 <template>
   <div>
-    <el-button @click="handleReturnButtonClicked()"
-      size="small">返回</el-button>
-    <el-button @click="handleClick()"
-      type="primary">保存</el-button>
-
-    <SimpleForm :formUI='detailFormUI'
+    <SimpleButtonGroup class='simplebuttongroup'
+      :buttonGroup='toolButtonGroupData' />
+    <SimpleForm ref='elForm'
+      class='simpleform'
+      :formUI='detailFormUI'
       :form='detailForm'
       :formModel='detailFormModel'>
       <!-- <template v-for='(item, index) in collapse.items'>
@@ -21,66 +20,188 @@
 </template>
 
 <script>
+import * as api_gda from '@/api/gda'
+import * as utils_resource from '@/utils/resource'
+import * as utils_ui from '@/utils/ui'
 //import utils from '@/mixins/utils'
 import SimpleForm from '@/components/Widgets/SimpleForm'
-import SimpleCollapse from '@/components/Widgets/SimpleCollapse'
+import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
+
+// import SimpleCollapse from '@/components/Widgets/SimpleCollapse'
 
 export default {
   name: 'SimpleTableDetail',
   //mixins: [utils],
-  components: { SimpleForm, SimpleCollapse },
+  components: {
+    SimpleForm,
+    SimpleButtonGroup,
+    // SimpleCollapse,
+  },
   props: {
+    /**
+     * 详情formUI数据,参见SimpleForm的formUI属性
+     */
     detailFormUI: {
       type: Object,
-      default: function () { return {} },
+      default: function () { return {} }
     },
+    /**
+     * 详情form数据,参见SimpleForm的form属性
+     */
     detailForm: {
       type: Object,
-      default: function () { return {} },
+      default: function () { return {} }
     },
+    /**
+     * 详情form数据Model,参见SimpleForm的formModel属性
+     */
     detailFormModel: {
       type: Object,
       default: function () { return {} },
     },
+    /**
+     * 要替换的工具按钮组，已有按钮组，包含uri: return,save
+     * 这些可以被替代默认设置，也可以自定义值，
+        [
+          {
+            uri:'xxx'          // xxx为按钮唯一标示uri
+            click:'',          // click为点击事件
+            name:'',           // name为按钮名字
+            buttonUI:{
+              // 参见element-ui el-button的属性
+            },
+          },...
+        ]
+     */
+    defaultDetailToolButtonGroup: {
+      type: Array,
+      default: function () { return [] },
+    },
   },
   data() {
     return {
+      // 工具按钮组
+      toolButtonGroupData: this.__getDetailToolButtonGroup(),
     }
   },
   methods: {
 		/**
 		 * 点击返回按钮
 		 */
-    handleReturnButtonClicked() {
+    __handleReturnButtonClicked() {
 			/**
 			 * 返回按钮
 			 * @event detailReturnClicked
 				*/
       this.$emit('detailReturnClicked')
     },
+    __handleSaveButtonClicked() {
+      // 校验form
+      this.$refs.elForm.validate((valid, obj) => {
+        if (valid) {
+          // 调用接口
+          var diffModel = utils_resource.getDifferenceModel([this.$refs.elForm.getFormResData()])
+          if (!diffModel) {
+            return
+          }
+          api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
+            this.$message({ message: '保存成功', type: 'success' })
+          }).catch((error) => {
+            // 设置界面
+            utils_ui.showErrorMessage(error)
+          })
+        } else {
+          let msg = ''
+          Object.keys(obj).forEach(key => {
+            obj[key].forEach(element => {
+              msg += element.field + ':' + element.message // todo element.field 细化扩展修改
+            })
+          })
+          utils_ui.showErrorMessage({ message: msg })
+          return
+        }
+      })
+
+    },
+    __getDetailToolButtonGroup() {
+      // 设置已有toolbuttongroup数据
+      var tempToolButtonGroup = [
+        [
+          {
+            uri: 'return',
+            name: '返回',
+            click: this.__handleReturnButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-search',
+            },
+          },
+        ], [
+          {
+            uri: 'save',
+            name: '保存',
+            click: this.__handleSaveButtonClicked,
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-tickets',
+            }
+          },
+        ], [
+          {
+            uri: 'import',
+            name: '导入',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-upload2',
+            }
+          }, {
+            uri: 'export',
+            name: '导出',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-download',
+            }
+          }, {
+            uri: 'print',
+            name: '打印',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-printer',
+            }
+          },
+        ]
+      ]
+      if (this.defaultDetailToolButtonGroup && this.defaultDetailToolButtonGroup.length !== 0) {
+        this.defaultDetailToolButtonGroup.forEach(button => {
+          var tempButton = this.__findButtonGroup(tempToolButtonGroup, button.uri)
+          if (tempButton) {
+            Object.keys(button).forEach(prop => {
+              tempButton[prop] = button[prop]
+            })
+          }
+        })
+      }
+      return tempToolButtonGroup
+    },
   },
 }
 </script>
 <style scoped>
-.el-form_header {
-  height: 48px;
-  line-height: 48px;
-  background-color: #fff;
-  color: #303133;
-  cursor: pointer;
-  border-bottom: 1px solid #abb2c7;
-  outline: none;
+.simplebuttongroup {
+  padding: 5px 10px 5px 10px;
 }
-.form {
-  margin: 0 auto;
-  width: 800px;
-}
-.input {
-  width: 400px;
-  padding: 0px;
-}
-.transfer {
-  padding: 24px;
+.simpleform {
+  padding: 5px 10px 5px 10px;
 }
 </style>
 

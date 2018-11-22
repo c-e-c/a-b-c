@@ -1,5 +1,6 @@
 <template>
   <el-form ref='elForm'
+    :class="{centerForm:!formUI.inline}"
     :model='formData'
     :rules='formUI.rules'
     :inline='formUI.inline'
@@ -10,7 +11,6 @@
     :inline-message='formUI.inlineMessage'
     :status-icon='formUI.statusIcon'
     :size='formUI.size'>
-    <!-- :class="{centerForm: form.divType}" -->
     <template v-for='(item, itemIndex) in form.items'>
       <template v-if='item.formVisible'>
         <template v-if='item.children && item.children.length>0'>
@@ -240,17 +240,11 @@ export default {
 </script>
 <style scoped>
 .el-form_header {
-  height: 48px;
   line-height: 48px;
-  background-color: #fff;
-  color: #303133;
-  cursor: pointer;
   border-bottom: 1px solid #abb2c7;
-  outline: none;
   margin-bottom: 10px;
 }
 .centerForm {
-  margin: 0 auto 0 0;
-  width: 50%;
+  margin: 0 auto; /*0 0;*/
 }
 </style>

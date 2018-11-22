@@ -1,7 +1,8 @@
 <template>
   <div>
     <template v-if="editorInfo.editorType==='ElSelect'">
-      <el-select :class="editorUI.class"
+      <el-select :class='editorUI.class'
+        :style='editorUI.style'
         :multiple='editorUI.multiple'
         :disabled='editorUI.disabled'
         :value-key='editorUI.valueKey'
@@ -44,6 +45,7 @@
     </template>
     <template v-else>
       <el-input :class="editorUI.class"
+        :style='editorUI.style'
         :type='editorUI.type'
         v-model='editorData.editValue'
         :maxlength='editorUI.maxlength'
