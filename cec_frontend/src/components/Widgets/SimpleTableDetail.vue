@@ -2,7 +2,7 @@
   <div>
     <SimpleButtonGroup class='simplebuttongroup'
       :buttonGroup='toolButtonGroupData' />
-    <template v-if='detailStyle === collapsestyle'>
+    <template v-if="detailStyle === 'collapsestyle'">
 
     </template>
     <template v-else>
