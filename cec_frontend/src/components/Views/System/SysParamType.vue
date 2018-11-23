@@ -98,6 +98,17 @@ export default {
               },
             ],
           }, {
+
+            fieldName: 'description',
+            columnVisible: true,
+            editable: true,
+            columnUI: {
+              label: '描述',
+            },
+            editorUI: {
+              type: 'textarea',
+            },
+          }, {
             // columnVisible: true,
             // columnUI: {
             //   label: '其它',

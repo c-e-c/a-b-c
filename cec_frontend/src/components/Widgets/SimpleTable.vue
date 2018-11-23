@@ -68,7 +68,7 @@
         <template v-for='(item, index) in table.items'>
           <simple-table-column v-if='item.columnVisible'
             :key='index'
-            :column='item'
+            :columnInfo='item'
             :columnUI='item.columnUI'>
           </simple-table-column>
         </template>

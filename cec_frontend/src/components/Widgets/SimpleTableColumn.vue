@@ -1,8 +1,8 @@
 <template>
-  <el-table-column v-if='column.children && column.children.length>0'
+  <el-table-column v-if='columnInfo.children && columnInfo.children.length>0'
     :type='columnUI.type'
     :index='columnUI.index'
-    :column-key='column.itemKey'
+    :column-key='columnInfo.itemKey'
     :label='columnUI.label'
     :prop='columnUI.prop'
     :width='columnUI.width'
@@ -24,10 +24,10 @@
     :filter-placement='columnUI.filterPlacement'
     :filter-method='columnUI.filterMethod'
     :filtered-value='columnUI.filteredValue'>
-    <template v-for='(child, index) in column.children'>
+    <template v-for='(child, index) in columnInfo.children'>
       <simple-table-column v-if='child.columnVisible'
         :key='index'
-        :column='child'
+        :columnInfo='child'
         :columnUI='child.columnUI'>
       </simple-table-column>
     </template>
@@ -35,9 +35,9 @@
   <el-table-column v-else
     :type='columnUI.type'
     :index='columnUI.index'
-    :column-key='column.itemKey'
+    :column-key='columnInfo.itemKey'
     :label='columnUI.label'
-    :prop="'props.'+column.itemKey+'.editValue'"
+    :prop="'props.'+columnInfo.itemKey+'.editValue'"
     :width='columnUI.width'
     :min-width='columnUI.minWidth'
     :fixed='columnUI.fixed'
@@ -64,10 +64,10 @@
         <template v-if='row.props[column.columnKey].editing'>
           <el-form-item :prop="'rows.'+$index+'.props.'+column.columnKey+'.editValue'"
             label=''
-            :rules="column.rules?column.rules:[]"
+            :rules="columnInfo.rules?columnInfo.rules:[]"
             size='mini'>
-            <DynamicEditor :editorUI='column.editorUI'
-              :editorInfo='column.editorInfo'
+            <DynamicEditor :editorUI='columnInfo.editorUI'
+              :editorInfo='columnInfo'
               :editorModel='row.props[column.columnKey]'
               @modelChanged='(val)=>{__handleTableCellModified(row, column.columnKey, val)}' />
           </el-form-item>
@@ -110,7 +110,7 @@ export default {
     /**
      * column信息
      */
-    column: {
+    columnInfo: {
       type: Object,
       default: function () { return {} },
     },
