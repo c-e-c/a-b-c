@@ -5,6 +5,8 @@ from common.gda.models import GeneralBaseModel
 # Create your models here.
 
 # 系统配置
+
+
 class SysParamType(GeneralBaseModel):
     """
         系统参数类型
@@ -43,7 +45,8 @@ class AppInstance(GeneralBaseModel):
 
     code = models.CharField(max_length=256, unique=True, verbose_name="编号")
     name = models.CharField(max_length=256, unique=True, verbose_name="名称")
-    app_module = models.IntegerField(blank=True, null=True, verbose_name="应用模块")
+    app_module = models.IntegerField(
+        blank=True, null=True, verbose_name="应用模块")
     # app_module = models.ForeignKey(
     #     SysParamValue,
     #     on_delete=models.SET_NULL,
@@ -76,7 +79,8 @@ class BizParamValue(GeneralBaseModel):
 
     code = models.CharField(max_length=256, unique=True, verbose_name="编号")
     name = models.CharField(max_length=256, unique=True, verbose_name="名称")
-    biz_module = models.IntegerField(blank=True, null=True, verbose_name="业务模块")
+    biz_module = models.IntegerField(
+        blank=True, null=True, verbose_name="业务模块")
     # biz_module = models.ForeignKey(
     #     SysParamValue,
     #     on_delete=models.SET_NULL,
@@ -85,7 +89,8 @@ class BizParamValue(GeneralBaseModel):
     #     related_name="biz_module",
     #     verbose_name="业务模块",
     # )
-    app_instance = models.IntegerField(blank=True, null=True, verbose_name="所属应用")
+    app_instance = models.IntegerField(
+        blank=True, null=True, verbose_name="所属应用")
     # app_instance = models.ForeignKey(
     #     AppInstance,
     #     on_delete=models.SET_NULL,
@@ -191,4 +196,3 @@ class BizParamValue(GeneralBaseModel):
 
 #     class Meta:
 #         verbose_name = '业务属性'
-

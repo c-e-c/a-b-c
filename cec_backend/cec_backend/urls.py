@@ -29,14 +29,15 @@ urlpatterns = [
     url(r"^admin/", admin.site.urls),
     ###
     # 主页
-    url(r"^$", django.views.generic.TemplateView.as_view(template_name="index.html")),
+    url(r"^$", django.views.generic.TemplateView.as_view(
+        template_name="index.html")),
     # 设置通用TOKEN
     url(r"^api-token-auth/", rest_framework.authtoken.views.obtain_auth_token),
     # 通用模块
     url(r"common/", include("common.gda.urls")),
-    url(r"common/", include("common.party.urls")),
     url(r"common/", include("common.system.urls")),
+    url(r"common/", include("common.party.urls")),
+    url(r"common/", include("common.member.urls")),
     url(r"common/", include("common.permission.urls")),
-    # url(r"common/", include("common.crm.urls")),
     ###
 ]

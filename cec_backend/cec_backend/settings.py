@@ -51,8 +51,9 @@ INSTALLED_APPS = [
     ###
     "common.gda",
     "common.system",
+    "common.party",
+    "common.member",
     "common.permission",
-    # "common.party",
     # "business_info",
     ###
 ]

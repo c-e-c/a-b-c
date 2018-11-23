@@ -6,6 +6,8 @@ from django.contrib.auth.models import Permission
 from common.gda.models import GeneralBaseModel
 
 # Create your models here.
+
+
 class Account(GeneralBaseModel):
     """
         账号
@@ -16,10 +18,11 @@ class Account(GeneralBaseModel):
          | email | is_staff | is_active | date_joined | last_name
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # 外键关联system模块SysParamValue表
-    account_type = models.IntegerField(blank=True, null=True, verbose_name="账号类型")
-    # 外键关联party模块Party表
-    party = models.IntegerField(blank=True, null=True, verbose_name="当事人")
+    # 外键关联system模块BizParamValue表
+    account_type = models.IntegerField(
+        blank=True, null=True, verbose_name="账号类型")
+    # 外键关联member模块member表
+    member = models.IntegerField(blank=True, null=True, verbose_name="会员")
     head_img = models.CharField(
         max_length=4096, blank=True, null=True, verbose_name="头像"
     )
@@ -30,7 +33,8 @@ class Account(GeneralBaseModel):
         choices=(("Y", "是"), ("N", "否")),
         verbose_name="邮箱绑定标志",
     )
-    tel = models.CharField(max_length=256, blank=True, null=True, verbose_name="手机号")
+    tel = models.CharField(max_length=256, blank=True,
+                           null=True, verbose_name="手机号")
     tel_binding_flag = models.CharField(
         max_length=256,
         null=True,
@@ -135,4 +139,3 @@ class ControlPolicy(GeneralBaseModel):
 
     class Meta:
         verbose_name = "控制策略"
-
