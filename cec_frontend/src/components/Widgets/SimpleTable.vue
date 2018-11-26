@@ -54,7 +54,6 @@
         </el-table-column> -->
         <el-table-column type='index'
           fixed
-          width='42px'
           align='center'>
           <el-form-item>
           </el-form-item>

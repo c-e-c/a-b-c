@@ -5,7 +5,7 @@
     :rules='formUI.rules'
     :inline='formUI.inline'
     :label-position='formUI.labelPosition'
-    :label-width="formUI.labelWidth ? formUI.labelWidth : '80px'"
+    :label-width='formUI.labelWidth'
     :label-suffix='formUI.labelSuffix'
     :show-message='formUI.showMessage'
     :inline-message='formUI.inlineMessage'
@@ -21,6 +21,7 @@
           <!-- 增加分组内容 -->
           <template v-for='(child, childIndex) in item.children'>
             <el-form-item v-if='child.formVisible'
+              :style='child.style'
               :prop="'props.'+child.itemKey+'.editValue'"
               :label='child.formItemUI.label'
               :label-width='child.formItemUI.labelWidth'
@@ -39,6 +40,7 @@
         </template>
         <template v-else>
           <el-form-item :key='itemIndex'
+            :style='item.style'
             :prop="'props.'+itemIndex+'.editValue'"
             :label='item.formItemUI?item.formItemUI.label:undefined'
             :label-width='item.formItemUI?item.formItemUI.labelWidth:undefined'
@@ -56,27 +58,6 @@
         </template>
       </template>
     </template>
-
-    <!-- <template v-else
-      v-for='(item, index) in form.items'>
-      <el-form-item v-if='item.formVisible'
-        :key='index'
-        :prop="'props.'+index+'.editValue'"
-        :label='item.formItemUI.label'
-        :label-width='item.formItemUI.labelWidth'
-        :required='item.formItemUI.required'
-        :rules='item.formItemUI.rules'
-        :error='item.formItemUI.error'
-        :show-message='item.formItemUI.showMessage'
-        :inline-message='item.formItemUI.inlineMessage'
-        :size='item.formItemUI.size'>
-        <DynamicEditor :slot="'props.'+index+'.editValue'"
-          :editorUI='item.editorUI'
-          :editorInfo='item'
-          :editorModel='formData.props[index]'
-          @modelChanged='(val)=>{__handleFormDataModified(val, index)}' />
-      </el-form-item>
-    </template> -->
   </el-form>
 </template>
 

@@ -33,9 +33,9 @@ class Account(GeneralBaseModel):
         choices=(("Y", "是"), ("N", "否")),
         verbose_name="邮箱绑定标志",
     )
-    tel = models.CharField(max_length=256, blank=True,
-                           null=True, verbose_name="手机号")
-    tel_binding_flag = models.CharField(
+    phone_number = models.CharField(max_length=256, blank=True,
+                                    null=True, verbose_name="手机号")
+    phone_binding_flag = models.CharField(
         max_length=256,
         null=True,
         blank=True,
@@ -50,8 +50,9 @@ class Account(GeneralBaseModel):
         null=True,
         blank=True,
         choices=(("Y", "是"), ("N", "否")),
-        verbose_name="QQ号绑定标志",
+        verbose_name="QQ绑定标志",
     )
+
     wechat_openid = models.CharField(
         max_length=4096, blank=True, null=True, verbose_name="微信openid"
     )
@@ -65,8 +66,8 @@ class Account(GeneralBaseModel):
     current_login_ip = models.CharField(
         max_length=256, blank=True, null=True, verbose_name="当前登录IP"
     )
-    current_login_device = models.CharField(
-        max_length=256, blank=True, null=True, verbose_name="当前登录设备"
+    current_login_type = models.CharField(
+        max_length=256, blank=True, null=True, verbose_name="当前登录类型"
     )
 
     class Meta:

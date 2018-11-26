@@ -17,7 +17,7 @@ import BizParamValue from '@/components/Views/System/BizParamValue'
 //
 // import ControlObject from '@/components/Permission/ControlObject'
 import Account from '@/components/Views/Permission/Account'
-import AccountDetail from '@/components/Views/Permission/AccountDetail'
+// import AccountDetail from '@/components/Views/Permission/AccountDetail'
 import Role from '@/components/Views/Permission/Role'
 //
 import Organization from '@/components/Views/OrgEmployee/Organization'

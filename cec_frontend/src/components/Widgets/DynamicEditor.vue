@@ -55,7 +55,7 @@
         :disabled='editorUI.disabled'
         :size='editorUI.size'
         :prefixIcon='editorUI.prefixIcon'
-        :suffixIcon='editorUI.suffixIcon	'
+        :suffixIcon='editorUI.suffixIcon'
         :rows='editorUI.rows'
         :autosize='editorUI.autosize'
         :autoComplete='editorUI.autoComplete'

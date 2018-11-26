@@ -98,7 +98,6 @@ export default {
               },
             ],
           }, {
-
             fieldName: 'description',
             columnVisible: true,
             editable: true,
