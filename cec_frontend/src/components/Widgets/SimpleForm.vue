@@ -34,14 +34,19 @@
               <DynamicEditor :editorUI='child.editorUI'
                 :editorInfo='child'
                 :editorModel='formData.props[child.itemKey]'
-                @modelChanged='(val)=>{__handleFormDataModified(val, child.itemKey)}' />
+                @modelChanged='(val)=>{__handleFormDataModified(val, child.itemKey)}'>
+                <template slot='dynamiceditor_customcontrol'>
+                  <slot :name="'dynamiceditor_customcontrol'+child.itemKey">
+                    <!-- {{child.itemKey}} -->
+                  </slot>
+                </template>
+              </DynamicEditor>
             </el-form-item>
           </template>
         </template>
         <template v-else>
-          <el-form-item :key='itemIndex'
-            :style='item.style'
-            :prop="'props.'+itemIndex+'.editValue'"
+          <el-form-item :style='item.style'
+            :prop="'props.'+item.itemKey+'.editValue'"
             :label='item.formItemUI?item.formItemUI.label:undefined'
             :label-width='item.formItemUI?item.formItemUI.labelWidth:undefined'
             :required='item.formItemUI?item.formItemUI.required:undefined'
@@ -52,8 +57,14 @@
             :size='item.formItemUI?item.formItemUI.size:undefined'>
             <DynamicEditor :editorUI='item.editorUI'
               :editorInfo='item'
-              :editorModel='formData.props[itemIndex]'
-              @modelChanged='(val)=>{__handleFormDataModified(val, itemIndex)}' />
+              :editorModel='formData.props[item.itemKey]'
+              @modelChanged='(val)=>{__handleFormDataModified(val, item.itemKey)}'>
+              <template slot='dynamiceditor_customcontrol'>
+                <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
+                  <!-- {{item.itemKey}} -->
+                </slot>
+              </template>
+            </DynamicEditor>
           </el-form-item>
         </template>
       </template>
@@ -106,8 +117,8 @@ export default {
 
             // 4、可选 孩子,目前只支持一层孩子，总共两层
             children:[{}],
-            // itemKey此字段SimpleForm初始化时自动生成
-            // itemKey: 'xxx',             
+            // itemKey此字段SimpleForm初始化时自动生成,不要修改
+            itemKey: 'xxx',             
           },{
             ...
         }],

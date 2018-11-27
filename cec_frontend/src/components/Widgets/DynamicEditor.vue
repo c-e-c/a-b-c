@@ -88,6 +88,7 @@
         @change='change'>
       </el-input>
     </template>
+    <slot name='dynamiceditor_customcontrol' />
   </div>
 </template>
 

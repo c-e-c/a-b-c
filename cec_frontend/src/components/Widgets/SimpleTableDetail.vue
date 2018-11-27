@@ -11,9 +11,16 @@
         :formUI='detailFormUI'
         :form='detailForm'
         :formModel='detailFormModel'>
+        <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+          <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
+            <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
+              <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
+            </slot>
+          </template>
+        </template>
       </SimpleForm>
     </template>
-    <slot name='customdetail' />
+    <slot name='simpletabledetail_customdetail' />
   </div>
 </template>
 
@@ -21,13 +28,13 @@
 import * as api_gda from '@/api/gda'
 import * as utils_resource from '@/utils/resource'
 import * as utils_ui from '@/utils/ui'
-//import utils from '@/mixins/utils'
+import utils from '@/mixins/utils'
 import SimpleButtonGroup from '@/components/Widgets/SimpleButtonGroup'
 import SimpleForm from '@/components/Widgets/SimpleForm'
 
 export default {
   name: 'SimpleTableDetail',
-  //mixins: [utils],
+  mixins: [utils],
   components: {
     SimpleForm,
     SimpleButtonGroup,
@@ -86,6 +93,9 @@ export default {
       // 工具按钮组
       toolButtonGroupData: this.__getDetailToolButtonGroup(),
     }
+  },
+  created() {
+    this._setLeafItems(this.detailForm.items)
   },
   methods: {
 		/**

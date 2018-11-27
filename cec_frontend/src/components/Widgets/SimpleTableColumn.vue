@@ -69,7 +69,8 @@
             <DynamicEditor :editorUI='columnInfo.editorUI'
               :editorInfo='columnInfo'
               :editorModel='row.props[column.columnKey]'
-              @modelChanged='(val)=>{__handleTableCellModified(row, column.columnKey, val)}' />
+              @modelChanged='(val)=>{__handleTableCellModified(row, column.columnKey, val)}'>
+            </DynamicEditor>
           </el-form-item>
         </template>
         <template v-else>

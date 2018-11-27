@@ -114,6 +114,15 @@
     :detailFormModel='detailFormData'
     :defaultDetailToolButtonGroup='defaultDetailToolButtonGroup'
     @detailReturnClicked='()=>listVisible=true'>
+    <!-- editor -->
+    <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+      <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
+        <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
+          <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
+        </slot>
+      </template>
+    </template>
+
     <template slot='customdetail'>
       <slot name="customdetail"></slot>
     </template>
@@ -212,8 +221,8 @@ export default {
 
             // 4、可选 item的孩子,数组中为多个子item对象，当有孩子时时，DynamicEditor属性无效
             children:[{},],
-            // itemKey此字段SimpleTable初始化时自动生成
-            // itemKey: 'xxx', 
+            // itemKey此字段SimpleTable初始化时自动生成，不要修改
+            itemKey: 'xxx', 
           },{
             ...
         }],
@@ -315,6 +324,7 @@ export default {
   },
   created() {
     this._setLeafItems(this.table.items)
+    this._setLeafItems(this.detailForm.items)
   },
   mounted() {
     // 计算elTable的高度
