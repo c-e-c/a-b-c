@@ -44,9 +44,23 @@
       </el-select>
     </template>
     <template v-else-if="editorInfo.editorType==='el-checkbox'">
+      <el-checkbox :class='editorUI.class'
+        :style='editorUI.style'
+        :label='editorUI.label'
+        :true-label='editorUI.trueLabel'
+        :false-label='editorUI.falseLabel'
+        :disabled='editorUI.disabled'
+        :border='editorUI.border'
+        :size='editorUI.size'
+        :name='editorUI.name'
+        :checked='editorUI.checked'
+        :indeterminate='editorUI.indeterminate'
+        v-model='editorData.editValue'>
+        {{editorUI.label}}
+      </el-checkbox>
     </template>
     <template v-else>
-      <el-input :class="editorUI.class"
+      <el-input :class='editorUI.class'
         :style='editorUI.style'
         :type='editorUI.type'
         v-model='editorData.editValue'
