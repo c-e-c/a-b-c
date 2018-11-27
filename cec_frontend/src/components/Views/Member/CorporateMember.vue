@@ -30,7 +30,7 @@ export default {
           {
             // 自定义
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
             // element-ui表单项信息
             formItemUI: {
@@ -86,7 +86,7 @@ export default {
             },
             // 自定义
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
           {
@@ -101,7 +101,7 @@ export default {
             },
             // 自定义
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
         ],
@@ -122,7 +122,7 @@ export default {
             editable: false,
           }, {
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -141,7 +141,7 @@ export default {
             },
           }, {
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -160,7 +160,7 @@ export default {
             },
           }, {
             uri: 'description',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -179,7 +179,7 @@ export default {
             },
           }, {
             uri: 'remark',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -198,7 +198,7 @@ export default {
             },
           }, {
             uri: 'sn',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {

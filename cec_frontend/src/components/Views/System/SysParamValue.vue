@@ -131,7 +131,7 @@ export default {
             columnUI: {
               label: '有效标志',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             editValue: 'Y',
             selectOptions: [{
               options: [{

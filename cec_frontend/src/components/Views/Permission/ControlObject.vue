@@ -238,7 +238,7 @@ export default {
             uri: "code",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           name: {
@@ -246,7 +246,7 @@ export default {
             visible: true,
             editable: true,
             showToTree: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           control_object_type: {
@@ -254,56 +254,56 @@ export default {
             visible: true,
             editable: true,
             selectOptions: [],
-            editorType: "ElSelect",
+            editorType: "el-select",
             displayValue: "",
           },
           remark: {
             uri: "remark",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           sn: {
             uri: "sn",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           created_man: {
             uri: "created_man",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           modified_man: {
             uri: "modified_man",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           created_datetime: {
             uri: "created_datetime",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           modified_datetime: {
             uri: "created_datetime",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
           parent: {
             uri: "parent",
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
             displayValue: "",
           },
         }
@@ -313,7 +313,7 @@ export default {
         props: {
           code: {
             uri: "code",
-            editorType: "ElInput",
+            editorType: "el-input",
             editValue: "",
             displayValue: "",
             comparison: "contains",
@@ -321,7 +321,7 @@ export default {
           },
           name: {
             uri: "name",
-            editorType: "ElInput",
+            editorType: "el-input",
             editValue: "",
             displayValue: "",
             comparison: "contains",
@@ -396,12 +396,12 @@ export default {
         name: {
           visible: true,
 
-          editorType: "ElInput",
+          editorType: "el-input",
         },
         code: {
           visible: true,
 
-          editorType: "ElInput",
+          editorType: "el-input",
         }
       }
     }

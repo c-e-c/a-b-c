@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="editorInfo.editorType==='ElSelect'">
+    <template v-if="editorInfo.editorType==='el-select'">
       <el-select :class='editorUI.class'
         :style='editorUI.style'
         :multiple='editorUI.multiple'
@@ -42,6 +42,8 @@
           </el-option>
         </el-option-group>
       </el-select>
+    </template>
+    <template v-else-if="editorInfo.editorType==='el-checkbox'">
     </template>
     <template v-else>
       <el-input :class="editorUI.class"
@@ -88,7 +90,7 @@ export default {
   props: {
     /**
      * 控件ui
-     * 具体控件属性,例如如果editorType='ElInput'就是el-input的属性
+     * 具体控件属性,例如如果editorType='el-input'就是el-input的属性
      * 如果是el-select就是el-select的属性
      */
     editorUI: {
@@ -99,12 +101,12 @@ export default {
     /**
      * 
       {
-        // 具体控件属性,例如如果editorType='ElInput'就是el-input的属性
-        // 可选 默认为ElInput类型，值为elementui的组件名如ElInput、ElSelect
-        editorType: 'ElInput',
+        // 具体控件属性,例如如果editorType='el-input'就是el-input的属性
+        // 可选 默认为el-input类型，值为elementui的组件名如el-input、el-select
+        editorType: 'el-input',
         // 可选 设置默认值
         editValue: 'xxx',
-        // 可选 如果editorType为ElSelect，则需要按照规则维护
+        // 可选 如果editorType为el-select，则需要按照规则维护
         selectOptions: [
           // 分组
           { 
@@ -152,7 +154,7 @@ export default {
     //   deep: true,
     // },
     'editorData.editValue': function (val) {
-      if (this.editorInfo.editorType === 'ElSelect') {
+      if (this.editorInfo.editorType === 'el-select') {
         this.editorData.displayValue = this._getValueFromDropdownGroup(this.editorInfo, val)
       } else {
         this.editorData.displayValue = val
@@ -168,7 +170,7 @@ export default {
   },
   methods: {
     change(value) {
-      //   if (this.editorInfo.editorType === 'ElSelect') {
+      //   if (this.editorInfo.editorType === 'el-select') {
       //     this.editorData.displayValue = this._getValueFromDropdownGroup(this.editorInfo, this.editorData.editValue)
       //   } else {
       //     this.editorData.displayValue = this.editorData.editValue

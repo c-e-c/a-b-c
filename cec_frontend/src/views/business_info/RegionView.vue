@@ -1,7 +1,6 @@
 <template>
   <div>
-    <SimpleTable 
-      :tableFilters="tableFilters" 
+    <SimpleTable :tableFilters="tableFilters"
       :tableFiltersModel="tableFiltersData"
       :tableInfo="tableInfo"
       :tableHeader="tableHeader"
@@ -66,12 +65,12 @@ export default {
         uri: "",
         props: {
           region_code: {
-            editorType: "ElInput",
+            editorType: "el-input",
             editValue: "",
             comparison: "contains",
           },
           region_name: {
-            editorType: "ElInput",
+            editorType: "el-input",
             editValue: "",
             comparison: "contains",
           }
@@ -163,17 +162,17 @@ export default {
           region_code: {
             visible: true,
             editable: true,    ///有问题，应该是isEditing
-            editorType: "ElInput",
+            editorType: "el-input",
           },
           region_name: {
             visible: true,
             editable: true,
-            editorType: "ElInput",
+            editorType: "el-input",
           },
           region_level: {
             visible: true,
             editable: true,
-            editorType: "ElSelect",
+            editorType: "el-select",
           },
         }
       }

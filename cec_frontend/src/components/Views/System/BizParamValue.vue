@@ -70,7 +70,7 @@ export default {
           }, {
             fieldName: 'biz_module',
             formVisible: true,
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取
             formItemUI: {
               label: '业务模块:',
@@ -82,7 +82,7 @@ export default {
           }, {
             fieldName: 'app_instance',
             formVisible: true,
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取
             formItemUI: {
               label: '所属应用:',
@@ -140,7 +140,7 @@ export default {
             columnUI: {
               label: '所属应用',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取,
           }, {
             fieldName: 'biz_module',
@@ -149,7 +149,7 @@ export default {
             columnUI: {
               label: '业务模块',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取,
           }, {
             fieldName: 'remark',
@@ -175,7 +175,7 @@ export default {
             columnUI: {
               label: '有效标志',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             editValue: 'Y',
             selectOptions: [{
               options: [{

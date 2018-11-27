@@ -30,7 +30,7 @@ export default {
           {
             // 自定义
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
             // element-ui表单项信息
             formItemUI: {
@@ -86,7 +86,7 @@ export default {
             },
             // 自定义
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
           {
@@ -101,7 +101,7 @@ export default {
             },
             // 自定义
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
           {
@@ -116,7 +116,7 @@ export default {
             },
             // 自定义
             uri: 'org_level',
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             comparison: 'exact',
             selectOptions: [
               {
@@ -142,7 +142,7 @@ export default {
             editable: false,
           }, {
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -161,7 +161,7 @@ export default {
             },
           }, {
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -191,7 +191,7 @@ export default {
             formItemUI: {
               label: '组织级别:',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             editorUI: {
               autofocus: true,
               clearable: true,
@@ -199,7 +199,7 @@ export default {
             },
           }, {
             uri: 'description',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -218,7 +218,7 @@ export default {
             },
           }, {
             uri: 'remark',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {
@@ -237,7 +237,7 @@ export default {
             },
           }, {
             uri: 'sn',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
             columnUI: {

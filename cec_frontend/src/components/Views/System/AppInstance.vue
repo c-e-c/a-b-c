@@ -20,7 +20,7 @@ export default {
           {
             fieldName: 'app_module',
             formVisible: true,
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取
             formItemUI: {
               label: '应用模块:',
@@ -96,7 +96,7 @@ export default {
             columnUI: {
               label: '应用模块',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             selectOptions: [{ options: [] }],  // created获取   
           }, {
             fieldName: 'remark',
@@ -122,7 +122,7 @@ export default {
             columnUI: {
               label: '有效标志',
             },
-            editorType: 'ElSelect',
+            editorType: 'el-select',
             editValue: 'Y',
             selectOptions: [{
               options: [{

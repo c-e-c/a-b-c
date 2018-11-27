@@ -53,7 +53,7 @@ export default {
       }
 
       props.forEach((prop, index) => {
-        if (constraintProps[index].editorType === 'ElSelect') {
+        if (constraintProps[index].editorType === 'el-select') {
           // 查找下拉id对应的value
           prop.displayValue = this._getValueFromDropdownGroup(
             constraintProps[index].selectOptions,
@@ -84,7 +84,7 @@ export default {
 
     /**
      * 将所得的datalist下拉信息，转换到dropdown下拉对象中
-     * dropdown的下拉对象为 ELSelect
+     * dropdown的下拉对象为 el-select
      * {
      *  value: xxx,
      *  label: xxx,

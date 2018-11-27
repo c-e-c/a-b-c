@@ -1,6 +1,5 @@
 <template>
-  <SimpleTable
-    :tableFilter='tableFilter'
+  <SimpleTable :tableFilter='tableFilter'
     :table='table'>
   </SimpleTable>
 </template>
@@ -31,7 +30,7 @@ export default {
             },
             // 自定义
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
           {
@@ -46,7 +45,7 @@ export default {
             },
             // 自定义
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             comparison: 'contains',
           },
         ],
@@ -80,7 +79,7 @@ export default {
               size: 'mini',
             },
             uri: 'code',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
           }, {
@@ -99,7 +98,7 @@ export default {
               size: 'mini',
             },
             uri: 'name',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
           }, {
@@ -118,7 +117,7 @@ export default {
               size: 'mini',
             },
             uri: 'remark',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
           }, {
@@ -137,7 +136,7 @@ export default {
               size: 'mini',
             },
             uri: 'sn',
-            editorType: 'ElInput',
+            editorType: 'el-input',
             visible: true,
             editable: true,
           }
