@@ -5,7 +5,7 @@
     :rules='formUI.rules'
     :inline='formUI.inline'
     :label-position='formUI.labelPosition'
-    :label-width='formUI.labelWidth'
+    :label-width="formUI.labelWidth?formUI.labelWidth:'80px'"
     :label-suffix='formUI.labelSuffix'
     :show-message='formUI.showMessage'
     :inline-message='formUI.inlineMessage'
@@ -31,6 +31,7 @@
               :show-message='child.formItemUI?child.formItemUI.showMessage:undefined'
               :inline-message='child.formItemUI?child.formItemUI.inlineMessage:undefined'
               :size='child.formItemUI?child.formItemUI.size:undefined'>
+              <!-- {{ __test(formData)}} -->
               <DynamicEditor :editorUI='child.editorUI'
                 :editorInfo='child'
                 :editorModel='formData.props[child.itemKey]'
@@ -55,6 +56,7 @@
             :show-message='item.formItemUI?item.formItemUI.showMessage:undefined'
             :inline-message='item.formItemUI?item.formItemUI.inlineMessage:undefined'
             :size='item.formItemUI?item.formItemUI.size:undefined'>
+            <!-- {{ __test(formData)}} -->
             <DynamicEditor :editorUI='item.editorUI'
               :editorInfo='item'
               :editorModel='formData.props[item.itemKey]'
@@ -147,7 +149,7 @@ export default {
     }
     return {
       /**
-       * formData为资源描述属性列表props信息，参考资源描述标准。其中每个列表属性需要与form.items的列表一一对应
+       * formData为资源描述属性列表props信息，参考资源描述标准。其中每个列表属性需要与form.items的列表顺序及itemKey一一对应
       */
       formData: tempFormData,
     }
@@ -191,6 +193,9 @@ export default {
        * @type {object}
        */
       this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
+    },
+    __test(obj) {
+      console.log()
     }
     // keyEvent(ev, v) {
     //   if (ev.keyCode == 13) {

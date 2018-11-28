@@ -74,7 +74,7 @@ export default {
             rules: [
               { required: true, message: '名称不能为空！' },
               {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                validator: (rule, value, callback) => { this.$refs.simpleTable.validateTableCellUnique(rule, value, callback) },
                 trigger: 'blur',
               },
             ],
@@ -88,7 +88,7 @@ export default {
             rules: [
               { required: true, message: '编号不能为空！' },
               {
-                validator: (rule, value, callback) => { this.$refs.simpleTable.validateUnique(rule, value, callback) },
+                validator: (rule, value, callback) => { this.$refs.simpleTable.validateTableCellUnique(rule, value, callback) },
                 trigger: 'blur',
               },
             ],

@@ -123,8 +123,8 @@
       </template>
     </template>
 
-    <template slot='customdetail'>
-      <slot name="customdetail"></slot>
+    <template slot='simpletabledetail_customdetail'>
+      <slot name="simpletabledetail_customdetail"></slot>
     </template>
   </SimpleTableDetail>
 </template>
@@ -237,7 +237,7 @@ export default {
      * 这些可以被替代默认设置，也可以自定义值，
         [
           {
-            uri:'xxx'          // xxx为按钮唯一标示uri
+            uri:'xxx',          // xxx为按钮唯一标示uri
             click:'',          // click为点击事件
             name:'',           // name为按钮名字
             buttonUI:{
@@ -252,7 +252,7 @@ export default {
     },
 
     /**
-     * 详情操作按钮
+     * 详情操作按钮,模式二下起作用
         {
           name:'',           // name为按钮名字
           visible: true      // 是否可视
@@ -373,21 +373,28 @@ export default {
      * 插入一条记录
      */
     insertData(parentUri) {
-      // 生成资源
-      let rd = utils_resource.generateResource(this._getLeafItems(this.table.items))
-      // 初始化设置资源属性
-      utils_resource.setResourceProperties(rd, this._getLeafItems(this.table.items))
-      // 设置资源的父
-      utils_resource.setResourceParent(rd, parentUri)
-      // 设置显示角色
-      this._setResourceDisplayValue(rd, this._getLeafItems(this.table.items))
-
       if (this.tableMode === 'modeone') {
+        // 生成资源
+        let rd = utils_resource.generateResource(this._getLeafItems(this.table.items))
+        // 初始化设置资源属性
+        utils_resource.setResourceProperties(rd, this._getLeafItems(this.table.items))
+        // 设置资源的父
+        utils_resource.setResourceParent(rd, parentUri)
+        // 设置显示角色
+        this._setResourceDisplayValue(rd, this._getLeafItems(this.table.items))
         // 设置单元格正在编辑状态
         utils_resource.setResourceEditingState(rd, true)
         // 插入一条资源
         utils_resource.addResource(this.tableData.rows, rd)
       } else if (this.tableMode === 'modetwo') {
+        // 生成资源
+        let rd = utils_resource.generateResource(this._getLeafItems(this.detailForm.items))
+        // 初始化设置资源属性
+        utils_resource.setResourceProperties(rd, this._getLeafItems(this.detailForm.items))
+        // 设置资源的父
+        utils_resource.setResourceParent(rd, parentUri)
+        // 设置显示角色
+        this._setResourceDisplayValue(rd, this._getLeafItems(this.detailForm.items))
         // 设置数据,返回一条数据
         this.detailFormData = rd
         // 设置打开明细页
@@ -395,9 +402,9 @@ export default {
       }
     },
     /**
-     * 校验单元格的唯一性 
+     * 校验表格单元格的唯一性 
      */
-    validateUnique(rule, value, callback) {
+    validateTableCellUnique(rule, value, callback) {
       // 表
       var type = this.table.tableName
       var rowIndex = rule.field.split('.')[1]   // rows.x.props.y.editValue
@@ -412,6 +419,26 @@ export default {
         callback()
       }
     },
+
+    /**
+     * 校验明细表单项的唯一性 
+     */
+    validateDetailItemUnique(rule, value, callback) {
+      // // 表
+      // var type = this.table.tableName
+      // var fieldIndex = rule.field.split('.')[1]  // props.y.editValue
+      // // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
+      // var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
+      // if (state === 'ROW_ADDED') {
+      //   this._validateUnique(rule, value, callback,
+      //     this.table.tableName,
+      //     this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
+      // } else {
+      //   callback()
+      // }
+    },
+
+
     // 点击查询按钮
     __handleSearchButtonClicked() {
       let offset = (this.$refs.simplePagination.getCurrentPage() - 1) * this.$refs.simplePagination.getPageSize()

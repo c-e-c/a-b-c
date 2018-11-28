@@ -147,7 +147,7 @@ export default {
      * 校验表单元格的唯一性 
      */
     validateTableCellUnique(rule, value, callback) {
-      this.$refs.simpleTable.validateUnique(rule, value, callback)
+      this.$refs.simpleTable.validateTableCellUnique(rule, value, callback)
     },
 
     // 根据树节点uri查询表的数据
