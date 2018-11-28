@@ -8,7 +8,7 @@
             class='simplefilter'
             :formUI='treeFilterUI'
             :form='treeFilter'
-            @modelChanged='__filterText' />
+            @formModelChanged='__filterText' />
         </el-col>
         <el-col :span="4">
           <el-button class='freshbutton'

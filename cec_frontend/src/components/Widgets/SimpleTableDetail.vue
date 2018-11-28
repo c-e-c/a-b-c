@@ -113,7 +113,7 @@ export default {
       this.$refs.elForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
-          var diffModel = utils_resource.getDifferenceModel([this.$refs.elForm.getFormResData()])
+          var diffModel = utils_resource.getDifferenceModel([this.$refs.elForm.getFormData()])
           if (!diffModel) {
             return
           }

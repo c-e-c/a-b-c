@@ -64,7 +64,7 @@
         <template v-if='row.props[column.columnKey].editing'>
           <el-form-item :prop="'rows.'+$index+'.props.'+column.columnKey+'.editValue'"
             label=''
-            :rules="columnInfo.rules?columnInfo.rules:[]"
+            :rules='columnInfo.rules'
             size='mini'>
             <DynamicEditor :editorUI='columnInfo.editorUI'
               :editorInfo='columnInfo'

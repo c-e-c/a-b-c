@@ -1,6 +1,7 @@
 <template>
   <el-form ref='elForm'
     :class='formUI.class'
+    :style='formUI.style'
     :model='formData'
     :rules='formUI.rules'
     :inline='formUI.inline'
@@ -11,15 +12,17 @@
     :inline-message='formUI.inlineMessage'
     :status-icon='formUI.statusIcon'
     :size='formUI.size'>
-    <template v-for='(item, itemIndex) in form.items'>
+
+    <template v-for='item in formInfoData.items'>
       <template v-if='item.formVisible'>
         <template v-if='item.children && item.children.length>0'>
           <!-- 增加分组头部 -->
-          <div class="el-form_header">
-            {{ item.formItemUI.label }}
+          <div :class="item.class?item.class:'el-form_header'"
+            :style='item.style'>
+            {{ item.formItemUI?item.formItemUI.label:'' }}
           </div>
           <!-- 增加分组内容 -->
-          <template v-for='(child, childIndex) in item.children'>
+          <template v-for='child in item.children'>
             <el-form-item v-if='child.formVisible'
               :style='child.style'
               :prop="'props.'+child.itemKey+'.editValue'"
@@ -46,7 +49,8 @@
           </template>
         </template>
         <template v-else>
-          <el-form-item :style='item.style'
+          <el-form-item :class='item.class'
+            :style='item.style'
             :prop="'props.'+item.itemKey+'.editValue'"
             :label='item.formItemUI?item.formItemUI.label:undefined'
             :label-width='item.formItemUI?item.formItemUI.labelWidth:undefined'
@@ -86,10 +90,6 @@ export default {
   name: 'SimpleForm',
   components: { DynamicEditor },
   mixins: [utils],
-  // model: {
-  //   prop: 'formModel',
-  //   event: 'modelChanged'
-  // },
   props: {
     /**
      * 表ui
@@ -118,9 +118,7 @@ export default {
             DynamicEditor控件的editorInfo的多个属性内容，参见DynamicEditor.editorInfo
 
             // 4、可选 孩子,目前只支持一层孩子，总共两层
-            children:[{}],
-            // itemKey此字段SimpleForm初始化时自动生成,不要修改
-            itemKey: 'xxx',             
+            children:[{}],           
           },{
             ...
         }],
@@ -131,7 +129,7 @@ export default {
       default: function () { return {} },
     },
     /**
-     * formmodel数据，参见资源描述对象
+     * formmodel数据，参见资源描述对象,formModel中的属性应该与form中的属性保持顺序一直
      */
     formModel: {
       type: Object,
@@ -139,60 +137,67 @@ export default {
     },
   },
   data: function () {
-    var tempFormData = {}
-    if (this.formModel && Object.keys(this.formModel).length !== 0) {
-      tempFormData = JSON.parse(JSON.stringify(this.formModel))
-    } else {
-      tempFormData = {
-        props: utils_resource.generateProperties(this._getLeafItems(this.form.items))
-      }
-    }
     return {
-      /**
-       * formData为资源描述属性列表props信息，参考资源描述标准。其中每个列表属性需要与form.items的列表顺序及itemKey一一对应
-      */
-      formData: tempFormData,
+      // 表单结构信息
+      formInfoData: this.__initFormInfoData(this.form),
+      // 表单内容信息。为资源描述对象，其中props顺序与itemKey顺序相同
+      formData: this.__initFormData(),
     }
-  },
-  created() {
-    this._setLeafItems(this.form.items)
   },
   methods: {
     /**
      * 清除表单数据
      */
-    reset() {
-      // 清除数据
-      var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.form.items))
-      this.formData = {
-        props: tempFormData
-      }
-      // 清除界面
-      this.$refs.elForm.resetFields()
-    },
+    // reset() {
+    //   // 清除数据
+    //   var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.form.items))
+    //   this.formData = {
+    //     props: tempFormData
+    //   }
+    //   // 清除界面
+    //   this.$refs.elForm.resetFields()
+    // },
     /**
      * 获取表单数据
      */
     getFormProps() {
       return JSON.parse(JSON.stringify(this.formData.props))
     },
-
     /**
      * 获取表单资源数据
      */
-    getFormResData() {
+    getFormData() {
       return JSON.parse(JSON.stringify(this.formData))
+    },
+    __initFormInfoData(formInfo) {
+      var retval = JSON.parse(JSON.stringify(formInfo))
+      // 生成itemKey属性  
+      this._setLeafItems(retval.items)
+      return retval
+    },
+    __initFormData() {
+      var tempList = this._getLeafItems(this.form.items)
+      var retval = {
+        uri: undefined,
+        props: [],
+      }
+      if (this.formModel && Object.keys(this.formModel).length > 0) {
+        retval.uri = this.formModel.uri
+        retval.props = utils_resource.generateProperties(this.formModel.props)
+      } else {
+        retval.props = utils_resource.generateProperties(tempList)
+      }
+      return retval
     },
 
     __handleFormDataModified(val, index) {
-      this.formData.props[index] = val
+      utils_resource.setProperty(this.formData.props, index, val)
       /**
        * form表单中得到改变的值.
-       *
-       * @event modelChanged
+       * @event formModelChanged
        * @type {object}
        */
-      this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
+      this.$emit('formModelChanged', JSON.parse(JSON.stringify(val)))
     },
     __test(obj) {
       console.log()
