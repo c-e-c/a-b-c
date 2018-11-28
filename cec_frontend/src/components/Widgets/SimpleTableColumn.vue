@@ -57,7 +57,6 @@
     :filter-placement='columnUI.filterPlacement'
     :filter-method='columnUI.filterMethod'
     :filtered-value='columnUI.filteredValue'>
-
     <template slot-scope='{ row, column, $index }'>
       <!-- {{ __test(row, column, $index) }} -->
       <template v-if='row.props && row.props[column.columnKey]'>
@@ -81,7 +80,6 @@
         <span> 错误数据 </span>
       </template>
     </template>
-
   </el-table-column>
 </template>
 <script>

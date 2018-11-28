@@ -12,7 +12,6 @@
     :inline-message='formUI.inlineMessage'
     :status-icon='formUI.statusIcon'
     :size='formUI.size'>
-
     <template v-for='item in formInfoData.items'>
       <template v-if='item.formVisible'>
         <template v-if='item.children && item.children.length>0'>
@@ -189,7 +188,6 @@ export default {
       }
       return retval
     },
-
     __handleFormDataModified(val, index) {
       utils_resource.setProperty(this.formData.props, index, val)
       /**

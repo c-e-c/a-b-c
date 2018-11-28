@@ -64,7 +64,7 @@
           <el-form-item>
           </el-form-item>
         </el-table-column>
-        <template v-for='(item, index) in table.items'>
+        <template v-for='(item, index) in tableInfoData.items'>
           <simple-table-column v-if='item.columnVisible'
             :key='index'
             :columnInfo='item'
@@ -90,7 +90,6 @@
                 @click='__handleDetailButtonClicked(row,column,$index)'>
                 {{detailOperatingButton.name}}
               </el-button>
-
               <slot name='simpletable_operating_column'
                 :row='row'
                 :column='column'
@@ -98,7 +97,6 @@
             </el-form-item>
           </template>
         </el-table-column>
-
       </el-table>
     </el-form>
     <!-- 传入elementui的page-total属性不起作用 -->
@@ -114,15 +112,13 @@
     :detailFormModel='detailFormData'
     :defaultDetailToolButtonGroup='defaultDetailToolButtonGroup'
     @detailReturnClicked='()=>listVisible=true'>
-    <!-- editor -->
-    <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+    <template v-for='item in _getLeafItems(detailForm.items)'>
       <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
         <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
           <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
         </slot>
       </template>
     </template>
-
     <template slot='simpletabledetail_customdetail'>
       <slot name="simpletabledetail_customdetail"></slot>
     </template>
@@ -195,7 +191,6 @@ export default {
       type: Object,
       default: function () { return {} },
     },
-
     /**
      * 表信息
       {
@@ -221,8 +216,6 @@ export default {
 
             // 4、可选 item的孩子,数组中为多个子item对象，当有孩子时时，DynamicEditor属性无效
             children:[{},],
-            // itemKey此字段SimpleTable初始化时自动生成，不要修改
-            itemKey: 'xxx', 
           },{
             ...
         }],
@@ -250,7 +243,6 @@ export default {
       type: Array,
       default: function () { return [] },
     },
-
     /**
      * 详情操作按钮,模式二下起作用
         {
@@ -311,7 +303,9 @@ export default {
   data: function () {
     return {
       // 工具按钮组
-      toolButtonGroupData: this.__getToolButtonGroup(),
+      toolButtonGroupData: this.__initToolButtonGroup(),
+      // 表信息
+      tableInfoData: this.__initTableInfoData(this.table),
       // 表数据
       tableData: {
         rows: [],// 资源描述序列
@@ -321,10 +315,6 @@ export default {
       // 表明细数据
       detailFormData: null,
     }
-  },
-  created() {
-    this._setLeafItems(this.table.items)
-    this._setLeafItems(this.detailForm.items)
   },
   mounted() {
     // 计算elTable的高度
@@ -344,23 +334,23 @@ export default {
      * 查询过滤条件的数据，offset默认从第0页分页
      */
     fetchData(filters, offset) {
-      api_gda.listData(this.table.tableName,
-        this._getLeafItems(this.table.items),
+      api_gda.listData(this.tableInfoData.tableName,
+        this._getLeafItems(this.tableInfoData.items),
         filters,
         this.$refs.simplePagination.getPageSize(),
         offset
       ).then((responseData) => {
         if (responseData.results) {
           // 生成分页数据
-          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafItems(this.table.items),
-            this.table.parentUri)
+          this.tableData.rows = utils_resource.setResources(responseData.results, this._getLeafItems(this.tableInfoData.items),
+            this.tableInfoData.parentUri)
         } else {
           // 生成不分页数据
-          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafItems(this.table.items),
-            this.table.parentUri)
+          this.tableData.rows = utils_resource.setResources(responseData, this._getLeafItems(this.tableInfoData.items),
+            this.tableInfoData.parentUri)
         }
         // 设置显示角色
-        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.table.items))
+        this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.tableInfoData.items))
         // 设置分页
         this.$refs.simplePagination.setPageTotal(responseData.count)
 
@@ -375,13 +365,13 @@ export default {
     insertData(parentUri) {
       if (this.tableMode === 'modeone') {
         // 生成资源
-        let rd = utils_resource.generateResource(this._getLeafItems(this.table.items))
+        let rd = utils_resource.generateResource(this._getLeafItems(this.tableInfoData.items))
         // 初始化设置资源属性
-        utils_resource.setResourceProperties(rd, this._getLeafItems(this.table.items))
+        utils_resource.setResourceProperties(rd, this._getLeafItems(this.tableInfoData.items))
         // 设置资源的父
         utils_resource.setResourceParent(rd, parentUri)
         // 设置显示角色
-        this._setResourceDisplayValue(rd, this._getLeafItems(this.table.items))
+        this._setResourceDisplayValue(rd, this._getLeafItems(this.tableInfoData.items))
         // 设置单元格正在编辑状态
         utils_resource.setResourceEditingState(rd, true)
         // 插入一条资源
@@ -406,14 +396,14 @@ export default {
      */
     validateTableCellUnique(rule, value, callback) {
       // 表
-      var type = this.table.tableName
+      var type = this.tableInfoData.tableName
       var rowIndex = rule.field.split('.')[1]   // rows.x.props.y.editValue
       var fieldIndex = rule.field.split('.')[3]  // rows.x.props.y.editValue
       // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
       var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
       if (state === 'ROW_ADDED') {
         this._validateUnique(rule, value, callback,
-          this.table.tableName,
+          this.tableInfoData.tableName,
           this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
       } else {
         callback()
@@ -425,20 +415,18 @@ export default {
      */
     validateDetailItemUnique(rule, value, callback) {
       // // 表
-      // var type = this.table.tableName
+      // var type = this.tableInfoData.tableName
       // var fieldIndex = rule.field.split('.')[1]  // props.y.editValue
       // // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
       // var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
       // if (state === 'ROW_ADDED') {
       //   this._validateUnique(rule, value, callback,
-      //     this.table.tableName,
+      //     this.tableInfoData.tableName,
       //     this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
       // } else {
       //   callback()
       // }
     },
-
-
     // 点击查询按钮
     __handleSearchButtonClicked() {
       let offset = (this.$refs.simplePagination.getCurrentPage() - 1) * this.$refs.simplePagination.getPageSize()
@@ -469,7 +457,7 @@ export default {
     // 表行操作列点击详情事件
     __handleDetailButtonClicked(row, column, $index) {
       var formProps = this._getLeafItems(this.detailForm.items)
-      api_gda.listData(this.table.tableName,
+      api_gda.listData(this.tableInfoData.tableName,
         formProps,
         [{
           fieldName: 'pk',
@@ -478,7 +466,7 @@ export default {
         },],
       ).then((responseData) => {
         // 设置数据,返回一条数据
-        this.detailFormData = utils_resource.setResource(responseData[0], formProps, this.table.parentUri)
+        this.detailFormData = utils_resource.setResource(responseData[0], formProps, this.tableInfoData.parentUri)
         // 设置打开明细页
         this.listVisible = false
       }).catch((error) => {
@@ -515,10 +503,10 @@ export default {
             utils_resource.setResourcesEditingState(this.tableData.rows, false)
             return
           }
-          api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
+          api_gda.saveData(this.tableInfoData.tableName, diffModel).then((responseData) => {
             utils_resource.saveResources(this.tableData.rows, responseData)
             // 设置显示角色
-            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.table.items))
+            this._setResourcesDisplayValue(this.tableData.rows, this._getLeafItems(this.tableInfoData.items))
             // 设置资源的编辑状态
             utils_resource.setResourcesEditingState(this.tableData.rows, false)
             this.$message({ message: '保存成功', type: 'success' })
@@ -583,7 +571,7 @@ export default {
         return ''
       }
     },
-    __getToolButtonGroup() {
+    __initToolButtonGroup() {
       // 设置已有toolbuttongroup数据
       var tempToolButtonGroup = null
       if (this.tableMode === 'modeone') {
@@ -803,6 +791,12 @@ export default {
         })
       }
       return tempToolButtonGroup
+    },
+    __initTableInfoData(tableInfo) {
+      var retval = JSON.parse(JSON.stringify(tableInfo))
+      // 生成itemKey属性  
+      this._setLeafItems(retval.items)
+      return retval
     },
   },
 }
