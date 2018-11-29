@@ -1,5 +1,6 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="showFlag"
+  <el-dialog :title="dialogTitle"
+    :visible.sync="showFlag"
     :width="dialog.width"
     :fullscreen="dialog.fullscreen"
     :top="dialog.top"
@@ -12,14 +13,12 @@
     :close-on-press-escape="dialog.closeOnPressEscape"
     :show-close="dialog.showClose"
     :center="dialog.center"
-    
     @close="close"
     @open="__open">
     <SimpleForm ref="simpleForm"
       :form="formUI"
       :formModel="formModel"
-      @formModelChanged="(val)=>{__storeModifiedFormModel(val)}"
-    />
+      @formModelChanged="(val)=>{__storeModifiedFormModel(val)}" />
     <div slot="footer">
       <template v-for="name in Object.keys(dialogButtons)">
         <!-- 关闭按钮直接实现，外部不需要实现 -->
@@ -34,9 +33,7 @@
             :icon="dialogButtons[name].icon"
             :autofocus="dialogButtons[name].autofocus"
             :native-type="dialogButtons[name].nativeType"
-            
-            @click.native="close"
-          >
+            @click.native="close">
             {{name}}
           </el-button>
         </template>
@@ -51,15 +48,13 @@
             :icon="dialogButtons[name].icon"
             :autofocus="dialogButtons[name].autofocus"
             :native-type="dialogButtons[name].nativeType"
-
-            @click.native="__save"
-          >
+            @click.native="__save">
             {{name}}
           </el-button>
         </template>
         <template v-else>
         </template>
-      </template>      
+      </template>
     </div>
   </el-dialog>
 </template>
@@ -232,7 +227,7 @@ export default {
     // 参数为[{prop:xxx,value:xxx}]
     __save() {
       // 判断修改的值跟原值是否一样,如果存在需要将this.modifiedFormData相应的值删除
-      let obj = JSON.parse(JSON.stringify(this.modifiedFormData))
+      let obj = _.cloneDeep(this.modifiedFormData)
       if (Object.keys(obj).length === 0) {
         this.close()
         return

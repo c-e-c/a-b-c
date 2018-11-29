@@ -288,14 +288,24 @@ export function hasResourcesSelected(rds) {
 }
 
 /**
- * 增加一个资源
+ * 追加一个资源
  */
-export function addResource(rds, rd) {
+export function appendResource(rds, rd) {
   if (!rds || !rd) {
     return
   }
   rd.difference = 'row_added'
   rds.push(rd)
+}
+
+/**
+ * 增加一个资源
+ */
+export function addResource(rd) {
+  if (!rd) {
+    return
+  }
+  rd.difference = 'row_added'
 }
 
 /**
@@ -346,7 +356,7 @@ export function getDifferenceModel(rds) {
     updated: [],
     removed: [],
   }
-  rds.rows.forEach(rd => {
+  rds.forEach(rd => {
     if (rd.difference === 'row_added') {
       let tempRd = {}
       rd.props.forEach(prop => {
@@ -521,7 +531,7 @@ export function generateTreeResources(nodeData, isExistRoot, treeRoot) {
   if (!nodeData) {
     return
   }
-  var tempNodeData = JSON.parse(JSON.stringify(nodeData))
+  var tempNodeData = _.cloneDeep(nodeData)
   // 先得到一级子节点
   var firstLevelNodes = []
   for (var i = tempNodeData.length - 1; i >= 0; i--) {

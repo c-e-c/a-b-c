@@ -128,7 +128,7 @@ export default {
 		 * 获取表单数据
 		 */
     getFormProps() {
-      return JSON.parse(JSON.stringify(this.formData.props))
+      return _.cloneDeepthis.formData.props)
     },
 
     __handleFormDataModified(val, index) {
@@ -139,7 +139,7 @@ export default {
 			 * @event modelChanged
 			 * @type {object}
 			 */
-      this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
+      this.$emit('modelChanged', _.cloneDeep(val))
     }
   },
 

@@ -27,8 +27,7 @@
         :reserve-keyword='editorUI.reserveKeyword'
         :default-first-option='editorUI.defaultFirstOption'
         :popper-append-to-body='editorUI.popperAppendToBody'
-        :automatic-dropdown='editorUI.automaticDropdown'
-        @change='change'>
+        :automatic-dropdown='editorUI.automaticDropdown'>
         <el-option-group v-for='group in editorInfo.selectOptions'
           :key='group.label'
           :label='group.label'
@@ -84,8 +83,7 @@
         :autofocus='editorUI.autofocus'
         :form='editorUI.form'
         :label='editorUI.label'
-        :tabindex='editorUI.tabindex'
-        @change='change'>
+        :tabindex='editorUI.tabindex'>
       </el-input>
     </template>
     <slot name='dynamiceditor_customcontrol' />
@@ -93,6 +91,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import utils from '@/mixins/utils';
 
 export default {
@@ -158,13 +157,13 @@ export default {
   // modelChanged 编辑器值被改变
   data: function () {
     return {
-      editorData: JSON.parse(JSON.stringify(this.editorModel))
+      editorData: _.cloneDeep(this.editorModel)
     }
   },
   watch: {
     // editorModel: {
     //   handler: function (val) {
-    //     this.editorData = JSON.parse(JSON.stringify(val))
+    //     this.editorData = _.cloneDeep(val)
     //   },
     //   deep: true,
     // },
@@ -180,24 +179,10 @@ export default {
        * @event modelChanged
        * @type {object}
        */
-      this.$emit('modelChanged', JSON.parse(JSON.stringify(this.editorData)))
+      this.$emit('modelChanged', _.cloneDeep(this.editorData))
     },
   },
   methods: {
-    change(value) {
-      //   if (this.editorInfo.editorType === 'el-select') {
-      //     this.editorData.displayValue = this._getValueFromDropdownGroup(this.editorInfo, this.editorData.editValue)
-      //   } else {
-      //     this.editorData.displayValue = this.editorData.editValue
-      //   }
-      //   /**
-      //    * form表单中得到改变的值.
-      //    *
-      //    * @event modelChanged
-      //    * @type {object}
-      //    */
-      //   this.$emit('modelChanged', JSON.parse(JSON.stringify(this.editorData)))
-    },
   },
 
 }

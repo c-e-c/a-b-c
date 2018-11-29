@@ -2,24 +2,19 @@
   <div>
     <SimpleButtonGroup class='simplebuttongroup'
       :buttonGroup='toolButtonGroupData' />
-    <template v-if="detailStyle === 'collapsestyle'">
-
-    </template>
-    <template v-else>
-      <SimpleForm ref='elForm'
-        class='simpleform'
-        :formUI='detailFormUI'
-        :form='detailForm'
-        :formModel='detailFormModel'>
-        <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
-          <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
-            <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
-              <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
-            </slot>
-          </template>
+    <SimpleForm ref='simpleForm'
+      class='simpleform'
+      :formUI='detailFormUI'
+      :form='detailForm'
+      :formModel='detailFormModel'>
+      <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+        <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
+          <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
+            <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
+          </slot>
         </template>
-      </SimpleForm>
-    </template>
+      </template>
+    </SimpleForm>
     <slot name='simpletabledetail_customdetail' />
   </div>
 </template>
@@ -98,6 +93,10 @@ export default {
     this._setLeafItems(this.detailForm.items)
   },
   methods: {
+    validateDetailItemUnique(rule, value, callback, tableName) {
+      this.$refs.simpleForm.validateDetailItemUnique(rule, value, callback, tableName)
+    },
+
 		/**
 		 * 点击返回按钮
 		 */
@@ -110,10 +109,10 @@ export default {
     },
     __handleSaveButtonClicked() {
       // 校验form
-      this.$refs.elForm.validate((valid, obj) => {
+      this.$refs.simpleForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
-          var diffModel = utils_resource.getDifferenceModel([this.$refs.elForm.getFormData()])
+          var diffModel = utils_resource.getDifferenceModel([this.$refs.simpleForm.getFormData()])
           if (!diffModel) {
             return
           }

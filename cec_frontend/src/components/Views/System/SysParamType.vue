@@ -13,6 +13,10 @@ export default {
   mixins: [utils],
   components: { SimpleTable },
   data() {
+    var validatePass = (rule, value, callback) => {
+      this.$refs.simpleTable.validateTableCellUnique(rule, value, callback)
+    }
+
     return {
       tableFilter: {
         items: [
@@ -73,13 +77,8 @@ export default {
               label: '名称',
             },
             rules: [
-              { required: true, message: '名称不能为空！' },
-              {
-                validator: (rule, value, callback) => {
-                  this.$refs.simpleTable.validateTableCellUnique(rule, value, callback)
-                },
-                trigger: 'blur',
-              },
+              { required: true, message: '名称不能为空！', },
+              { validator: validatePass, trigger: 'blur', },
             ],
           }, {
             fieldName: 'code',
@@ -89,13 +88,8 @@ export default {
               label: '编号',
             },
             rules: [
-              { required: true, message: '编号不能为空！' },
-              {
-                validator: (rule, value, callback) => {
-                  this.$refs.simpleTable.validateTableCellUnique(rule, value, callback)
-                },
-                trigger: 'blur',
-              },
+              { required: true, message: '编号不能为空！', },
+              { validator: validatePass, trigger: 'blur', },
             ],
           }, {
             fieldName: 'description',

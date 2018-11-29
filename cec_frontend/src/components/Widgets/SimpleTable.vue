@@ -107,6 +107,7 @@
     </SimplePagination>
   </div>
   <SimpleTableDetail v-else
+    ref='simpleTableDetail'
     :detailFormUI='detailFormUI'
     :detailForm='detailForm'
     :detailFormModel='detailFormData'
@@ -126,6 +127,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import * as api_gda from '@/api/gda'
 import * as utils_resource from '@/utils/resource'
 import * as utils_ui from '@/utils/ui'
@@ -306,7 +308,9 @@ export default {
       toolButtonGroupData: this.__initToolButtonGroup(),
       // 表信息
       tableInfoData: this.__initTableInfoData(this.table),
-      // 表数据
+      // 表数据,必须按照这种模式来写，
+      // 校验的el-form-item的prop是'rows.'+$index+'.props.'+column.columnKey+'.editValue'的形式。必须含有rows
+      // table的data属性应该传tableData.rows数组
       tableData: {
         rows: [],// 资源描述序列
       },
@@ -375,7 +379,7 @@ export default {
         // 设置单元格正在编辑状态
         utils_resource.setResourceEditingState(rd, true)
         // 插入一条资源
-        utils_resource.addResource(this.tableData.rows, rd)
+        utils_resource.appendResource(this.tableData.rows, rd)
       } else if (this.tableMode === 'modetwo') {
         // 生成资源
         let rd = utils_resource.generateResource(this._getLeafItems(this.detailForm.items))
@@ -385,6 +389,8 @@ export default {
         utils_resource.setResourceParent(rd, parentUri)
         // 设置显示角色
         this._setResourceDisplayValue(rd, this._getLeafItems(this.detailForm.items))
+        // 插入一条资源
+        utils_resource.addResource(rd)
         // 设置数据,返回一条数据
         this.detailFormData = rd
         // 设置打开明细页
@@ -396,12 +402,13 @@ export default {
      */
     validateTableCellUnique(rule, value, callback) {
       // 表
-      var type = this.tableInfoData.tableName
       var rowIndex = rule.field.split('.')[1]   // rows.x.props.y.editValue
       var fieldIndex = rule.field.split('.')[3]  // rows.x.props.y.editValue
       // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
       var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
-      if (state === 'ROW_ADDED') {
+      var currentValue = this.tableData.rows[rowIndex].props[fieldIndex].oldEditValue
+      if (state === 'ROW_ADDED' ||
+        (state === 'ROW_MODIFIED' && currentValue !== value)) {
         this._validateUnique(rule, value, callback,
           this.tableInfoData.tableName,
           this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
@@ -414,18 +421,7 @@ export default {
      * 校验明细表单项的唯一性 
      */
     validateDetailItemUnique(rule, value, callback) {
-      // // 表
-      // var type = this.tableInfoData.tableName
-      // var fieldIndex = rule.field.split('.')[1]  // props.y.editValue
-      // // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
-      // var state = utils_resource.getResourceDifferenceState(this.tableData.rows[rowIndex])
-      // if (state === 'ROW_ADDED') {
-      //   this._validateUnique(rule, value, callback,
-      //     this.tableInfoData.tableName,
-      //     this.tableData.rows[rowIndex].props[fieldIndex].fieldName)
-      // } else {
-      //   callback()
-      // }
+      this.$refs.simpleTableDetail.validateDetailItemUnique(rule, value, callback, this.tableInfoData.tableName)
     },
     // 点击查询按钮
     __handleSearchButtonClicked() {
@@ -497,7 +493,7 @@ export default {
       this.$refs.elForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
-          var diffModel = utils_resource.getDifferenceModel(this.tableData)
+          var diffModel = utils_resource.getDifferenceModel(this.tableData.rows)
           if (!diffModel) {
             // 设置资源的编辑状态
             utils_resource.setResourcesEditingState(this.tableData.rows, false)
@@ -793,7 +789,7 @@ export default {
       return tempToolButtonGroup
     },
     __initTableInfoData(tableInfo) {
-      var retval = JSON.parse(JSON.stringify(tableInfo))
+      var retval = _.cloneDeep(tableInfo)
       // 生成itemKey属性  
       this._setLeafItems(retval.items)
       return retval

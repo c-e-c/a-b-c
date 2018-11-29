@@ -134,12 +134,12 @@ export default {
                   label: '账号:',
                   rules: [
                     { required: true, message: '账号不能为空！' },
-                    // {
-                    //   validator: (rule, value, callback) => {
-                    //     this.$refs.simpleTable.validateTableCellUnique(rule, value, callback)
-                    //   },
-                    //   trigger: 'blur',
-                    // },
+                    {
+                      validator: (rule, value, callback) => {
+                        this.$refs.simpleTable.validateDetailItemUnique(rule, value, callback)
+                      },
+                      trigger: 'blur',
+                    },
                   ],
                 },
                 editorUI: {

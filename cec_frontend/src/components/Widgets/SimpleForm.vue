@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import * as utils_resource from '@/utils/resource'
 import utils from '@/mixins/utils'
 import DynamicEditor from '@/components/Widgets/DynamicEditor'
@@ -156,46 +157,64 @@ export default {
     //   // 清除界面
     //   this.$refs.elForm.resetFields()
     // },
+    validateDetailItemUnique(rule, value, callback, tableName) {
+      // 表
+      var fieldIndex = rule.field.split('.')[1]  // props.y.editValue
+      // 查看当前资源行的差异状态，如果为修改和删除，则不判断唯一性
+      var state = utils_resource.getResourceDifferenceState(this.formData)
+      var currentValue = this.formData.props[fieldIndex].oldEditValue
+      if (state === 'ROW_ADDED' || (state === 'ROW_MODIFIED' && currentValue !== value)) {
+        this._validateUnique(rule, value, callback,
+          tableName,
+          this.formData.props[fieldIndex].fieldName)
+      } else {
+        callback()
+      }
+    },
+    /**
+     * 同el-form的validate，参见el-form
+     */
+    validate(func) {
+      this.$refs.elForm.validate(func)
+    },
+
+
     /**
      * 获取表单数据
      */
     getFormProps() {
-      return JSON.parse(JSON.stringify(this.formData.props))
+      return _.cloneDeep(this.formData.props)
     },
     /**
      * 获取表单资源数据
      */
     getFormData() {
-      return JSON.parse(JSON.stringify(this.formData))
+      return _.cloneDeep(this.formData)
     },
     __initFormInfoData(formInfo) {
-      var retval = JSON.parse(JSON.stringify(formInfo))
+      var retval = _.cloneDeep(formInfo)
       // 生成itemKey属性  
       this._setLeafItems(retval.items)
       return retval
     },
     __initFormData() {
       var tempList = this._getLeafItems(this.form.items)
-      var retval = {
-        uri: undefined,
-        props: [],
-      }
+      var retval = {}
       if (this.formModel && Object.keys(this.formModel).length > 0) {
-        retval.uri = this.formModel.uri
-        retval.props = utils_resource.generateProperties(this.formModel.props)
+        retval = _.cloneDeep(this.formModel)
       } else {
-        retval.props = utils_resource.generateProperties(tempList)
+        retval = utils_resource.generateResource(tempList)
       }
       return retval
     },
     __handleFormDataModified(val, index) {
-      utils_resource.setProperty(this.formData.props, index, val)
+      utils_resource.modifyResource(this.formData, index, val)
       /**
        * form表单中得到改变的值.
        * @event formModelChanged
        * @type {object}
        */
-      this.$emit('formModelChanged', JSON.parse(JSON.stringify(val)))
+      this.$emit('formModelChanged', _.cloneDeep(val))
     },
     __test(obj) {
       console.log()
@@ -209,26 +228,6 @@ export default {
     // }
   },
   watch: {
-    // // 外界数据被修改，直接深拷贝数据，暂时先写成JSON形式转换
-    // formModel: {
-    //   handler: function (val) {
-    //     this.formData = JSON.parse(JSON.stringify(val))
-    //   },
-    //   deep: true,
-    // },
-    // // 内部数据被修改
-    // formData: {
-    //   handler: function (val) {
-    //     /**
-    //      * form表单中得到改变的值.
-    //      *
-    //      * @event modelChanged
-    //      * @type {object}
-    //      */
-    //     this.$emit('modelChanged', JSON.parse(JSON.stringify(val)))
-    //   },
-    //   deep: true,
-    // }
   },
 }
 </script>
