@@ -108,6 +108,7 @@
   </div>
   <SimpleTableDetail v-else
     ref='simpleTableDetail'
+    :tableName='tableInfoData.tableName'
     :detailFormUI='detailFormUI'
     :detailForm='detailForm'
     :detailFormModel='detailFormData'

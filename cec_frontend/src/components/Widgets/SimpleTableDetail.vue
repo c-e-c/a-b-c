@@ -2,19 +2,21 @@
   <div>
     <SimpleButtonGroup class='simplebuttongroup'
       :buttonGroup='toolButtonGroupData' />
-    <SimpleForm ref='simpleForm'
-      class='simpleform'
-      :formUI='detailFormUI'
-      :form='detailForm'
-      :formModel='detailFormModel'>
-      <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
-        <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
-          <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
-            <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
-          </slot>
+    <template v-if="detailStyle==='formstyle'">
+      <SimpleForm ref='simpleForm'
+        class='simpleform'
+        :formUI='detailFormUI'
+        :form='detailForm'
+        :formModel='detailFormModel'>
+        <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+          <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
+            <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
+              <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
+            </slot>
+          </template>
         </template>
-      </template>
-    </SimpleForm>
+      </SimpleForm>
+    </template>
     <slot name='simpletabledetail_customdetail' />
   </div>
 </template>
@@ -35,8 +37,13 @@ export default {
     SimpleButtonGroup,
   },
   props: {
+    tableName: {
+      type: String,
+      default: '',
+    },
     /**
-     * 明细样式：包含formstyle,collapsestyle。默认为form
+     * 明细样式：包含formstyle,customstyle。默认为formstyle
+     * customstyle:通过slot名为simpletabledetail_customdetail进行实现
      */
     detailStyle: {
       type: String,
@@ -116,7 +123,7 @@ export default {
           if (!diffModel) {
             return
           }
-          api_gda.saveData(this.table.tableName, diffModel).then((responseData) => {
+          api_gda.saveData(this.tableName, diffModel).then((responseData) => {
             this.$message({ message: '保存成功', type: 'success' })
           }).catch((error) => {
             // 设置界面
