@@ -128,7 +128,7 @@ export default {
 		 * 获取表单数据
 		 */
     getFormProps() {
-      return _.cloneDeepthis.formData.props)
+      return _.cloneDeep(this.formData.props)
     },
 
     __handleFormDataModified(val, index) {
