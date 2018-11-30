@@ -40,7 +40,8 @@ def tableClass(tableName):
         生成TableModel类
     """
     return getattr(
-        __import__(ClassPackageMapping[tableName] + ".models", fromlist=["models"]),
+        __import__(ClassPackageMapping[tableName] +
+                   ".models", fromlist=["models"]),
         tableName,
     )
     pass
@@ -272,7 +273,8 @@ class CommonDestroyModelMixin(mixins.DestroyModelMixin):
                 )
                 pass
         else:
-            super(CommonDestroyModelMixin, self).destroy(self, request, *args, **kwargs)
+            super(CommonDestroyModelMixin, self).destroy(
+                self, request, *args, **kwargs)
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -440,4 +442,3 @@ class CommonViewSet(
 
         return CommonResponse(retval)
         pass
-

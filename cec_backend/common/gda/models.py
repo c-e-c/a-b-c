@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+
+
 class GeneralBaseModel(models.Model):
     """
         abstract base model
@@ -9,8 +11,10 @@ class GeneralBaseModel(models.Model):
     description = models.CharField(
         max_length=4096, null=True, blank=True, verbose_name="描述"
     )
-    remark = models.CharField(max_length=4096, null=True, blank=True, verbose_name="备注")
-    sn = models.CharField(max_length=256, null=True, blank=True, verbose_name="排序号")
+    remark = models.CharField(
+        max_length=4096, null=True, blank=True, verbose_name="备注")
+    sn = models.CharField(max_length=256, null=True,
+                          blank=True, verbose_name="排序号")
     valid_flag = models.CharField(
         max_length=256,
         null=True,

@@ -5,6 +5,8 @@ from common.gda.serializers import DynamicFieldsModelSerializer
 from common.system.models import *
 
 # 需要根据业务实现
+
+
 class SysParamTypeSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = SysParamType

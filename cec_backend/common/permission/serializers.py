@@ -6,6 +6,8 @@ from common.gda.serializers import DynamicFieldsModelSerializer
 from common.permission.models import *
 
 # 需要根据业务实现
+
+
 class AccountSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Account

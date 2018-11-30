@@ -68,10 +68,10 @@ class PermissionViewSet(CommonViewSet):
 
         post_save.disconnect(create_user)
 
-        retval = super(PermissionViewSet, self).saveData(request, *args, **kwargs)
+        retval = super(PermissionViewSet, self).saveData(
+            request, *args, **kwargs)
 
         post_save.connect(create_user, settings.AUTH_USER_MODEL)
 
         return retval
         pass
-
