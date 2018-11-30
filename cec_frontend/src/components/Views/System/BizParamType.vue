@@ -1,7 +1,7 @@
 <template>
   <SimpleTable ref='simpleTable'
     :tableFilter='tableFilter'
-    :table='table' />
+    :tableInfo='table' />
 </template>
 <script>
 import utils from '@/mixins/utils'

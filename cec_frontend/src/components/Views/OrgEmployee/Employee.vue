@@ -1,8 +1,8 @@
 <template>
   <SimpleTreeTable :treeFilter='treeFilter'
-    :tree='tree'
+    :treeInfo='tree'
     :tableFilter='tableFilter'
-    :table='table'
+    :tableInfo='table'
     tableAssoProp='org' />
 </template>
 

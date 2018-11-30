@@ -2,7 +2,7 @@
   <SimpleTable v-if='isList'
     ref='simpleTable'
     :tableFilter='tableFilter'
-    :table='table'>
+    :tableInfo='table'>
     <template slot='operating_column'
       slot-scope='{ row, column, $index }'>
       <el-button @click="handleClick(row)"

@@ -6,7 +6,7 @@
         :treeFilterUI='treeFilterUI'
         :treeFilter='treeFilter'
         :treeUI='treeUI'
-        :tree='tree'
+        :treeInfo='treeInfo'
         @nodeClick='__queryTableData' />
     </el-aside>
     <el-main>
@@ -15,8 +15,8 @@
         :tableFilterUI='tableFilterUI'
         :tableFilter='tableFilter'
         :tableUI='tableUI'
-        :table='table'
-        :defaultToolButtonGroup='defaultToolButtonGroup'
+        :tableInfo='tableInfo'
+        :listToolButtonGroup='listToolButtonGroup'
         @tableDataSaved='__queryTreeData' />
     </el-main>
   </el-container>
@@ -73,7 +73,7 @@ export default {
     /** 
      * 树信息，参见SimpleTree的tree对象 
      */
-    tree: {
+    treeInfo: {
       type: Object,
       default: function () { return {} },
     },
@@ -116,7 +116,7 @@ export default {
     /**
      * 树信息, 参见SimpleTable的table属性
      */
-    table: {
+    tableInfo: {
       type: Object,
       default: function () { return {} }
     },
@@ -130,7 +130,7 @@ export default {
   },
   data() {
     return {
-      defaultToolButtonGroup: [
+      listToolButtonGroup: [
         {
           uri: 'search',
           click: this.__queryTableData,
@@ -181,7 +181,7 @@ export default {
 
       // 表
       this.$refs.simpleTable.insertData({
-        fieldName: this.table.parentFieldName,
+        fieldName: this.tableInfo.parentFieldName,
         editValue: currentTreeNodeUri,
       })
     },

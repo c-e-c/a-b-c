@@ -115,7 +115,7 @@ export default {
         }],
       }  
      */
-    tree: {
+    treeInfo: {
       type: Object,
       required: true,
     },
@@ -131,9 +131,9 @@ export default {
       treeNodeProps: {
         label: (data, node) => {
           if (data.uri === this.treeRoot.uri) {
-            return this.tree.rootName
+            return this.treeInfo.rootName
           } else {
-            let fn = utils_resource.findProperty(data.props, this.tree.displayFieldName)
+            let fn = utils_resource.findProperty(data.props, this.treeInfo.displayFieldName)
             if (fn) {
               return fn.editValue
             } else {
@@ -152,16 +152,16 @@ export default {
   methods: {
     //正常加载代码    
     fetchData(currentTreeNodeUri) {
-      api_gda.listData(this.tree.tableName,
-        this.tree.items,
+      api_gda.listData(this.treeInfo.tableName,
+        this.treeInfo.items,
         (this.$refs.treeFilter ? this.$refs.treeFilter.getFormProps() : null),
       ).then((responseData) => {
         // 生成分页数据
-        let nodeData = utils_resource.setResources(responseData, this.tree.items, this.tree.parentFieldName)
+        let nodeData = utils_resource.setResources(responseData, this.treeInfo.items, this.treeInfo.parentFieldName)
         // 设置显示角色
-        this._setResourcesDisplayValue(nodeData, this.tree.items)
+        this._setResourcesDisplayValue(nodeData, this.treeInfo.items)
         // 生成树
-        this.treeData = utils_resource.generateTreeResources(nodeData, this.tree.rootVisible, this.treeRoot)
+        this.treeData = utils_resource.generateTreeResources(nodeData, this.treeInfo.rootVisible, this.treeRoot)
         // 设置当前节点
         if (currentTreeNodeUri) {
           this.$refs.tree.setCurrentKey(currentTreeNodeUri)
@@ -174,10 +174,10 @@ export default {
     __filterNodeMethod(value, data, node) {
       if (!value || !value.editValue || value.editValue == '') return true
       // 判断树根
-      if (this.tree.rootVisible && this.isTreeRoot(data.uri)) {
+      if (this.treeInfo.rootVisible && this.isTreeRoot(data.uri)) {
         return true
       }
-      let obj = utils_resource.findProperty(data.props, this.tree.displayFieldName)
+      let obj = utils_resource.findProperty(data.props, this.treeInfo.displayFieldName)
       if (!obj) {
         return false
       }

@@ -2,9 +2,9 @@
   <div v-if='listVisible'
     class='simpletable'>
     <!-- 工具栏按钮 -->
-    <SimpleButtonGroup ref='simpleButtonGroup'
-      class='simplebuttongroup'
-      :buttonGroup='toolButtonGroupData' />
+    <SimpleButtonGroup ref='listToolButtonGroup'
+      class='listtoolbuttongroup'
+      :buttonGroup='listToolButtonGroupData' />
     <!-- 查询条件 -->
     <SimpleForm v-if='tableFilterVisible'
       ref='simpleFilter'
@@ -106,6 +106,8 @@
       :changeCurrentPage='__handlePaginationCurrentChanged'>
     </SimplePagination>
   </div>
+  <!-- <div v-else>
+  </div> -->
   <SimpleTableDetail v-else
     ref='simpleTableDetail'
     :tableName='tableInfoData.tableName'
@@ -117,7 +119,6 @@
     <template v-for='item in _getLeafItems(detailForm.items)'>
       <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
         <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
-          <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
         </slot>
       </template>
     </template>
@@ -158,6 +159,24 @@ export default {
     tableMode: {
       type: String,
       default: 'modeone',
+    },
+    /**
+     * 要替换的工具按钮组，已有按钮组，包含uri：search,add,remove,save,print,import,export
+     * 这些可以被替代默认设置，也可以自定义值，
+        [
+          {
+            uri:'xxx',          // xxx为按钮唯一标示uri
+            click:'',          // click为点击事件
+            name:'',           // name为按钮名字
+            buttonUI:{
+              // 参见element-ui el-button的属性
+            },
+          },...
+        ]
+     */
+    listToolButtonGroup: {
+      type: Array,
+      default: function () { return [] },
     },
     /**
      * 是否显示表过滤信息
@@ -224,28 +243,11 @@ export default {
         }],
       }
      */
-    table: {
+    tableInfo: {
       type: Object,
       required: true,
     },
-    /**
-     * 要替换的工具按钮组，已有按钮组，包含uri：search,add,remove,save,print,import,export
-     * 这些可以被替代默认设置，也可以自定义值，
-        [
-          {
-            uri:'xxx',          // xxx为按钮唯一标示uri
-            click:'',          // click为点击事件
-            name:'',           // name为按钮名字
-            buttonUI:{
-              // 参见element-ui el-button的属性
-            },
-          },...
-        ]
-     */
-    defaultToolButtonGroup: {
-      type: Array,
-      default: function () { return [] },
-    },
+
     /**
      * 详情操作按钮,模式二下起作用
         {
@@ -306,9 +308,9 @@ export default {
   data: function () {
     return {
       // 工具按钮组
-      toolButtonGroupData: this.__initToolButtonGroup(),
+      listToolButtonGroupData: this.__initListToolButtonGroup(),
       // 表信息
-      tableInfoData: this.__initTableInfoData(this.table),
+      tableInfoData: this.__initTableInfoData(this.tableInfo),
       // 表数据,必须按照这种模式来写，
       // 校验的el-form-item的prop是'rows.'+$index+'.props.'+column.columnKey+'.editValue'的形式。必须含有rows
       // table的data属性应该传tableData.rows数组
@@ -540,7 +542,7 @@ export default {
     },
     __handleResize() {
       if (this.$refs.elForm) {
-        let simpleButtonGroupOffsetHeight = this.$refs.simpleButtonGroup ? this.$refs.simpleButtonGroup.$el.offsetHeight : '0'
+        let simpleButtonGroupOffsetHeight = this.$refs.listToolButtonGroup ? this.$refs.listToolButtonGroup.$el.offsetHeight : '0'
         let simpleFilterOffsetHeight = this.$refs.simpleFilter ? this.$refs.simpleFilter.$el.offsetHeight : '0'
         let simplePaginationOffsetHeight = this.$refs.simplePagination ? this.$refs.simplePagination.$el.offsetHeight : '0'
 
@@ -568,7 +570,7 @@ export default {
         return ''
       }
     },
-    __initToolButtonGroup() {
+    __initListToolButtonGroup() {
       // 设置已有toolbuttongroup数据
       var tempToolButtonGroup = null
       if (this.tableMode === 'modeone') {
@@ -777,8 +779,8 @@ export default {
         ]
       }
 
-      if (this.defaultToolButtonGroup && this.defaultToolButtonGroup.length !== 0) {
-        this.defaultToolButtonGroup.forEach(button => {
+      if (this.listToolButtonGroup && this.listToolButtonGroup.length !== 0) {
+        this.listToolButtonGroup.forEach(button => {
           var tempButton = this.__findButtonGroup(tempToolButtonGroup, button.uri)
           if (tempButton) {
             Object.keys(button).forEach(prop => {
@@ -803,7 +805,7 @@ export default {
 .simpletable {
   height: 100%;
 }
-.simplebuttongroup {
+.listtoolbuttongroup {
   padding: 5px 10px 5px 10px;
 }
 .simplefilter {

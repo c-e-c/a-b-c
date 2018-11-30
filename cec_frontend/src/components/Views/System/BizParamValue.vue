@@ -1,9 +1,9 @@
 <template>
   <SimpleTreeTable ref='treeTable'
     :treeFilter='treeFilter'
-    :tree='tree'
+    :treeInfo='tree'
     :tableFilter='tableFilter'
-    :table='table'
+    :tableInfo='table'
     tableAssoProp='param_type' />
 </template>
 

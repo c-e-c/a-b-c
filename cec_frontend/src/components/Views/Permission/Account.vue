@@ -2,8 +2,7 @@
   <SimpleTable ref='simpleTable'
     tableMode='modetwo'
     :tableFilter='tableFilter'
-    :table='table'
-    :defaultToolButtonGroup='toolButtonGroup'
+    :tableInfo='table'
     :detailFormUI='detailForm.formUI'
     :detailForm='detailForm'>
     <template slot='dynamiceditor_customcontrol2'>
@@ -106,12 +105,6 @@ export default {
           },
         ],
       },
-      toolButtonGroup: [
-        // {
-        //   uri: 'insert',
-        //   click: this.__handleAddButtonClicked,
-        // },
-      ],
       detailForm: {
         // formUI: {
         //   inline: true,

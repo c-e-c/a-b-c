@@ -1,6 +1,6 @@
 <template>
   <SimpleTable :tableFilter='tableFilter'
-    :table='table'>
+    :tableInfo='table'>
   </SimpleTable>
 </template>
 <script>
