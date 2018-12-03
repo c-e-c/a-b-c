@@ -2,9 +2,8 @@
   <SimpleTable ref='simpleTable'
     tableMode='modetwo'
     :tableFilter='tableFilter'
-    :tableInfo='table'
-    :detailFormUI='detailForm.formUI'
-    :detailForm='detailForm'>
+    :tableInfo='tableInfo'
+    :detailFormInfo='detailFormInfo'>
     <template slot='dynamiceditor_customcontrol2'>
       <el-button type='primary'
         size='mini'
@@ -60,7 +59,7 @@ export default {
           },
         ],
       },
-      table: {
+      tableInfo: {
         tableName: 'Account',
         items: [
           {
@@ -105,12 +104,7 @@ export default {
           },
         ],
       },
-      detailForm: {
-        // formUI: {
-        //   inline: true,
-        //   inlineMessage: true,
-        //   labelWidth: '100px',
-        // },
+      detailFormInfo: {
         items: [
           {
             fieldName: 'pk',

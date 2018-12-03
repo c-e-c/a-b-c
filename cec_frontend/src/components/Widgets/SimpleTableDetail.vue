@@ -6,9 +6,9 @@
       <SimpleForm ref='simpleForm'
         class='simpleform'
         :formUI='detailFormUI'
-        :formInfo='detailForm'
+        :formInfo='detailFormInfo'
         :formModel='detailFormModel'>
-        <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
+        <template v-for='(item,index) in _getLeafItems(detailFormInfo.items)'>
           <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
             <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
               <!-- {{'dynamiceditor_customcontrol'+item.itemKey}} -->
@@ -60,7 +60,7 @@ export default {
     /**
      * 详情form数据,参见SimpleForm的form属性
      */
-    detailForm: {
+    detailFormInfo: {
       type: Object,
       default: function () { return {} }
     },
@@ -97,7 +97,7 @@ export default {
     }
   },
   created() {
-    this._setLeafItems(this.detailForm.items)
+    this._setLeafItems(this.detailFormInfo.items)
   },
   methods: {
     validateDetailItemUnique(rule, value, callback, tableName) {

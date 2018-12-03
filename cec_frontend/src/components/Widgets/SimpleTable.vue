@@ -112,11 +112,11 @@
     ref='simpleTableDetail'
     :tableName='tableInfoData.tableName'
     :detailFormUI='detailFormUI'
-    :detailForm='detailForm'
+    :detailFormInfo='detailFormInfo'
     :detailFormModel='detailFormData'
     :defaultDetailToolButtonGroup='defaultDetailToolButtonGroup'
     @detailReturnClicked='()=>listVisible=true'>
-    <template v-for='item in _getLeafItems(detailForm.items)'>
+    <template v-for='item in _getLeafItems(detailFormInfo.items)'>
       <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
         <slot :name="'dynamiceditor_customcontrol'+item.itemKey">
         </slot>
@@ -282,7 +282,7 @@ export default {
     /**
      * 详情form数据,参见SimpleForm的form属性
      */
-    detailForm: {
+    detailFormInfo: {
       type: Object,
       default: function () { return {} }
     },
@@ -385,13 +385,13 @@ export default {
         utils_resource.appendResource(this.tableData.rows, rd)
       } else if (this.tableMode === 'modetwo') {
         // 生成资源
-        let rd = utils_resource.generateResource(this._getLeafItems(this.detailForm.items))
+        let rd = utils_resource.generateResource(this._getLeafItems(this.detailFormInfo.items))
         // 初始化设置资源属性
-        utils_resource.setResourceProperties(rd, this._getLeafItems(this.detailForm.items))
+        utils_resource.setResourceProperties(rd, this._getLeafItems(this.detailFormInfo.items))
         // 设置资源的父
         utils_resource.setResourceParent(rd, parentUri)
         // 设置显示角色
-        this._setResourceDisplayValue(rd, this._getLeafItems(this.detailForm.items))
+        this._setResourceDisplayValue(rd, this._getLeafItems(this.detailFormInfo.items))
         // 插入一条资源
         utils_resource.addResource(rd)
         // 设置数据,返回一条数据
@@ -455,7 +455,7 @@ export default {
     },
     // 表行操作列点击详情事件
     __handleDetailButtonClicked(row, column, $index) {
-      var formProps = this._getLeafItems(this.detailForm.items)
+      var formProps = this._getLeafItems(this.detailFormInfo.items)
       api_gda.listData(this.tableInfoData.tableName,
         formProps,
         [{
