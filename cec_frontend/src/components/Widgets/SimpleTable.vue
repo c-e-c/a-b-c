@@ -273,6 +273,13 @@ export default {
       },
     },
     /**
+     * 参见simpletabledetail的detailStyle属性
+     */
+    detailStyle: {
+      type: String,
+      default: 'formstyle'
+    },
+    /**
      * 详情formUI数据,参见SimpleForm的formUI属性
      */
     detailFormUI: {

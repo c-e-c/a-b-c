@@ -100,7 +100,14 @@ export default {
     this._setLeafItems(this.detailFormInfo.items)
   },
   methods: {
+    /**
+     * detailStyle为formstyle时有效
+     */
     validateDetailItemUnique(rule, value, callback, tableName) {
+      if (!this.$refs.simpleForm) {
+        return
+      }
+
       this.$refs.simpleForm.validateDetailItemUnique(rule, value, callback, tableName)
     },
 
@@ -114,8 +121,14 @@ export default {
 				*/
       this.$emit('detailReturnClicked')
     },
+    /**
+     * detailStyle为formstyle时有效
+     */
     __handleSaveButtonClicked() {
       // 校验form
+      if (!this.$refs.simpleForm) {
+        return
+      }
       this.$refs.simpleForm.validate((valid, obj) => {
         if (valid) {
           // 调用接口
