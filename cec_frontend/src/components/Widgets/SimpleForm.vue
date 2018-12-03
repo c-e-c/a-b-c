@@ -124,7 +124,7 @@ export default {
         }],
       }
      */
-    form: {
+    formInfo: {
       type: Object,
       default: function () { return {} },
     },
@@ -139,7 +139,7 @@ export default {
   data: function () {
     return {
       // 表单结构信息
-      formInfoData: this.__initFormInfoData(this.form),
+      formInfoData: this.__initFormInfoData(this.formInfo),
       // 表单内容信息。为资源描述对象，其中props顺序与itemKey顺序相同
       formData: this.__initFormData(),
     }
@@ -150,7 +150,7 @@ export default {
      */
     // reset() {
     //   // 清除数据
-    //   var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.form.items))
+    //   var tempFormData = utils_resource.generateProperties(this._getLeafItems(this.formInfo.items))
     //   this.formData = {
     //     props: tempFormData
     //   }
@@ -198,7 +198,7 @@ export default {
       return retval
     },
     __initFormData() {
-      var tempList = this._getLeafItems(this.form.items)
+      var tempList = this._getLeafItems(this.formInfo.items)
       var retval = {}
       if (this.formModel && Object.keys(this.formModel).length > 0) {
         retval = _.cloneDeep(this.formModel)

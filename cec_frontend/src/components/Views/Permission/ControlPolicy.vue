@@ -12,7 +12,7 @@
   </SimpleTable>
   <!-- <AccountDetail v-else
     :formUI='formUI'
-    :form='table'
+    :formInfo='table'
     @detailReturn='()=>isList=true'>
   </AccountDetail> -->
 </template>

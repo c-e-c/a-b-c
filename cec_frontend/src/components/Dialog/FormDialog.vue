@@ -16,7 +16,7 @@
     @close="close"
     @open="__open">
     <SimpleForm ref="simpleForm"
-      :form="formUI"
+      :formInfo="formUI"
       :formModel="formModel"
       @formModelChanged="(val)=>{__storeModifiedFormModel(val)}" />
     <div slot="footer">

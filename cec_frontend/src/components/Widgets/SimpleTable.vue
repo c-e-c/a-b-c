@@ -10,7 +10,7 @@
       ref='simpleFilter'
       class='simplefilter'
       :formUI='tableFilterUI'
-      :form='tableFilter' />
+      :formInfo='tableFilter' />
     <!-- 表 -->
     <el-form ref='elForm'
       :model='tableData'

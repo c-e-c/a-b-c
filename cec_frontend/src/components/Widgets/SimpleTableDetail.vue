@@ -6,7 +6,7 @@
       <SimpleForm ref='simpleForm'
         class='simpleform'
         :formUI='detailFormUI'
-        :form='detailForm'
+        :formInfo='detailForm'
         :formModel='detailFormModel'>
         <template v-for='(item,index) in _getLeafItems(detailForm.items)'>
           <template :slot="'dynamiceditor_customcontrol'+item.itemKey">

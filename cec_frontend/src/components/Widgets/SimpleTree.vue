@@ -7,7 +7,7 @@
           <SimpleForm ref='treeFilter'
             class='simplefilter'
             :formUI='treeFilterUI'
-            :form='treeFilter'
+            :formInfo='treeFilter'
             @formModelChanged='__filterText' />
         </el-col>
         <el-col :span="4">
