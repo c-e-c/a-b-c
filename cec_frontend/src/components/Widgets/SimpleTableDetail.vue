@@ -73,7 +73,7 @@ export default {
     },
     /**
      * 要替换的工具按钮组，已有按钮组，包含uri: return,save
-     * 这些可以被替代默认设置，也可以自定义值，
+     * 已有的可以被替代默认设置，未有的进行增加，
         [
           {
             uri:'xxx'          // xxx为按钮唯一标示uri
@@ -85,7 +85,7 @@ export default {
           },...
         ]
      */
-    defaultDetailToolButtonGroup: {
+    detailToolButtonGroup: {
       type: Array,
       default: function () { return [] },
     },
@@ -182,7 +182,22 @@ export default {
               icon: 'el-icon-tickets',
             }
           },
-        ], [
+        ],
+      ]
+      if (this.detailToolButtonGroup && this.detailToolButtonGroup.length !== 0) {
+        this.detailToolButtonGroup.forEach(button => {
+          var tempButton = this.__findButtonGroup(tempToolButtonGroup, button.uri)
+          if (tempButton) {
+            Object.keys(button).forEach(prop => {
+              tempButton[prop] = button[prop]
+            })
+          } else {
+            tempToolButtonGroup.push([button])
+          }
+        })
+      }
+      tempToolButtonGroup.push(
+        [
           {
             uri: 'import',
             name: '导入',
@@ -212,17 +227,8 @@ export default {
             }
           },
         ]
-      ]
-      if (this.defaultDetailToolButtonGroup && this.defaultDetailToolButtonGroup.length !== 0) {
-        this.defaultDetailToolButtonGroup.forEach(button => {
-          var tempButton = this.__findButtonGroup(tempToolButtonGroup, button.uri)
-          if (tempButton) {
-            Object.keys(button).forEach(prop => {
-              tempButton[prop] = button[prop]
-            })
-          }
-        })
-      }
+      )
+
       return tempToolButtonGroup
     },
   },

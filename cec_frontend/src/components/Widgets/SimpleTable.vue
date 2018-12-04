@@ -114,7 +114,7 @@
     :detailFormUI='detailFormUI'
     :detailFormInfo='detailFormInfo'
     :detailFormModel='detailFormData'
-    :defaultDetailToolButtonGroup='defaultDetailToolButtonGroup'
+    :detailToolButtonGroup='detailToolButtonGroup'
     @detailReturnClicked='()=>listVisible=true'>
     <template v-for='item in _getLeafItems(detailFormInfo.items)'>
       <template :slot="'dynamiceditor_customcontrol'+item.itemKey">
@@ -307,7 +307,7 @@ export default {
           },...
         ]
      */
-    defaultDetailToolButtonGroup: {
+    detailToolButtonGroup: {
       type: Array,
       default: function () { return [] }
     },
@@ -593,9 +593,7 @@ export default {
                 size: 'mini',
                 icon: 'el-icon-search',
               },
-            },
-          ], [
-            {
+            }, {
               uri: 'add',
               name: '增加',
               click: this.__handleAddButtonClicked,
@@ -636,56 +634,7 @@ export default {
                 icon: 'el-icon-tickets',
               }
             },
-            // ], [
-            //   {
-            //     uri: 'pass',
-            //     name: '通过',
-            //     visible: true,
-            //     buttonUI: {
-            //       type: 'primary',
-            //       size: 'mini',
-            //       icon: 'el-icon-circle-check-outline',
-            //     }
-            //   }, {
-            //     uri: 'reject',
-            //     name: '驳回',
-            //     visible: true,
-            //     buttonUI: {
-            //       type: 'primary',
-            //       size: 'mini',
-            //       icon: 'el-icon-circle-close-outline',
-            //     }
-            //   },
-          ], [
-            {
-              uri: 'import',
-              name: '导入',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-upload2',
-              }
-            }, {
-              uri: 'export',
-              name: '导出',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-download',
-              }
-            }, {
-              uri: 'print',
-              name: '打印',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-printer',
-              }
-            },
-          ]
+          ],
         ]
       } else if (this.tableMode === 'modetwo') {
         tempToolButtonGroup = [
@@ -700,9 +649,7 @@ export default {
                 size: 'mini',
                 icon: 'el-icon-search',
               },
-            },
-          ], [
-            {
+            }, {
               uri: 'add',
               name: '增加',
               click: this.__handleAddButtonClicked,
@@ -733,56 +680,7 @@ export default {
                 icon: 'el-icon-tickets',
               }
             },
-            // ], [
-            //   {
-            //     uri: 'pass',
-            //     name: '通过',
-            //     visible: true,
-            //     buttonUI: {
-            //       type: 'primary',
-            //       size: 'mini',
-            //       icon: 'el-icon-circle-check-outline',
-            //     }
-            //   }, {
-            //     uri: 'reject',
-            //     name: '驳回',
-            //     visible: true,
-            //     buttonUI: {
-            //       type: 'primary',
-            //       size: 'mini',
-            //       icon: 'el-icon-circle-close-outline',
-            //     }
-            //   },
-          ], [
-            {
-              uri: 'import',
-              name: '导入',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-upload2',
-              }
-            }, {
-              uri: 'export',
-              name: '导出',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-download',
-              }
-            }, {
-              uri: 'print',
-              name: '打印',
-              visible: true,
-              buttonUI: {
-                type: 'primary',
-                size: 'mini',
-                icon: 'el-icon-printer',
-              }
-            },
-          ]
+          ],
         ]
       }
 
@@ -793,9 +691,43 @@ export default {
             Object.keys(button).forEach(prop => {
               tempButton[prop] = button[prop]
             })
+          } else {
+            tempToolButtonGroup.push([button])
           }
         })
       }
+      tempToolButtonGroup.push(
+        [
+          {
+            uri: 'import',
+            name: '导入',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-upload2',
+            }
+          }, {
+            uri: 'export',
+            name: '导出',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-download',
+            }
+          }, {
+            uri: 'print',
+            name: '打印',
+            visible: true,
+            buttonUI: {
+              type: 'primary',
+              size: 'mini',
+              icon: 'el-icon-printer',
+            }
+          },
+        ]
+      )
       return tempToolButtonGroup
     },
     __initTableInfoData(tableInfo) {
