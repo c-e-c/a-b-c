@@ -8,10 +8,8 @@ module.exports = {
   //components: 'src/components/**/[A-Z]*.vue',
   components: function () {
     return [
-      'src/components/Dialog/FormDialog.vue',
-      'src/components/Widgets/SimpleForm.vue',
+      'src/components/Widgets/SimpleTable.vue',
       'src/components/Widgets/SimplePagination.vue',
-
     ]
   },
 
