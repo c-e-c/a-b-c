@@ -8,7 +8,7 @@
 二、npm常用安装包
 	npm install -g webpack
 	npm install -g vue
-	//npm install -g @vue/cli
+	//sudo npm install -g @vue/cli
 	npm install vue-cli -g
 
 	npm install node-sass sass-loader css-loader axios lodash element-ui nprogress js-cookie vuex normalize.css
