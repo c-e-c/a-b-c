@@ -6,8 +6,9 @@
 	pip3 install django djangorestframework pymysql markdown django-filter django-cors-headers
 	
 二、npm常用安装包
-	npm install webpack -g
-	npm install vue -g
+	npm install -g webpack
+	npm install -g vue
+	//npm install -g @vue/cli
 	npm install vue-cli -g
 
 	npm install node-sass sass-loader css-loader axios lodash element-ui nprogress js-cookie vuex normalize.css
