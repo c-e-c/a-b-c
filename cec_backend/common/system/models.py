@@ -1,5 +1,6 @@
+###
 from django.db import models
-
+###
 from common.gda.models import GeneralBaseModel
 
 # Create your models here.
@@ -31,7 +32,7 @@ class SysParamValue(GeneralBaseModel):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        verbose_name="系统参数类型",
+        verbose_name="系统参数值",
     )
 
     class Meta:
