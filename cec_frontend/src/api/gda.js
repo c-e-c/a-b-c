@@ -72,7 +72,7 @@ export function listData(tableName, props, filters, pageSize, pageOffset) {
 
   return fetch2({
     baseURL: 'http://127.0.0.1:8000',
-    url: model_url_mapping[tableName],
+    url: 'common/gda_list',//model_url_mapping[tableName],
     method: 'get',
     params: {
       type: tableName,
