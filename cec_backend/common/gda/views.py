@@ -448,17 +448,6 @@ class CommonViewSet(
         pass
 
 
-class CustomAutoSchema(AutoSchema):
-
-    # def get_link(self, path, method, base_url):
-        # override view introspection here...
-        # pass
-    pass
-
-
-# import coreapi ,coreschema
-
-
 @api_view(['GET'])
 # @schema(AutoSchema(
 #     manual_fields=[
@@ -557,4 +546,79 @@ def gda_list(request, format=None):
         pass
 
     return Response(retval)
+    pass
+
+
+@api_view(['GET'])
+def gda_multilist(request):
+    '''
+    type为表名（必选）如'SysParamType'，
+    props（可选）为要查询的列名数组，如果是关联表的属性，则用外键+__+字段的方式
+    filters（可选）为过滤条件数组，数组的一个对象type中prop为过滤的列，
+        value为值，comparison为django查询的关键词如contains, exact等
+        type为采用django多关联的方式，如'entity__blogs'表示Entity表中关联Blog表的记录
+    {
+        xxx:{
+            'type': 'xxx',
+            'props': ['xxx', ],
+            'filters': [{
+                'prop': 'xxx',
+                'value': 'xxx',
+                'comparison': 'contains',
+            }, ],
+        },
+    }
+    '''
+    paramList = request.query_params
+
+    retval = dict()
+    for (paramKey, paramValue) in paramList.items():
+        params = json.loads(paramValue)
+        tableName = params.get('type')
+
+        Table = getattr(
+            __import__(
+                ClassPackageMapping[tableName] + '.models', fromlist=['models']
+            ),
+            tableName,
+        )
+        queryset = None
+        if params.get('filters') is not None:
+            filters = params.get('filters')
+            d = dict()
+            for filter in filters:
+                k = filter['prop'] + '__' + filter['comparison']
+                v = filter['value']
+                if filter['comparison'] == 'isnull':
+                    if filter['value'] == 'True':
+                        v = True
+                    else:
+                        v = False
+                d[k] = v
+            queryset = Table.objects.filter(**d)
+        else:
+            queryset = Table.objects.all()
+
+        retval[paramKey] = queryset.values(*params.get('props'))
+        pass
+
+    return Response(retval)
+    pass
+
+
+@api_view(['POST'])
+def gda_save(request):
+    '''
+        type为表名（必选），如SysParamType
+        diffModel（必选）为差异模型资源序列,
+        其中insert为插入的资源序列，update为修改的资源序列，remove为删除的资源id序列
+        {
+            'type': 'xxx',
+            'inserted': [{'列名xxx': '列值xxx'},],
+            'updated': [{'pk':'主键xxx', '列名xxx': '列值xxx'},],
+            'removed': ['主键xxx',]
+        }
+    '''
+    params = request.data
+
     pass

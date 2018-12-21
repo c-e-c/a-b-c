@@ -4,7 +4,7 @@ from django.conf.urls import url, include
 import rest_framework.routers
 import rest_framework.urlpatterns
 
-from common.gda.views import CommonViewSet, gda_list
+from common.gda.views import CommonViewSet, gda_list, gda_multilist
 
 ###
 
@@ -19,4 +19,5 @@ urlpatterns = rest_framework.urlpatterns.format_suffix_patterns(urlpatterns)
 
 urlpatterns += [
     url(r"gda_list", gda_list),
+    url(r"gda_multilist", gda_multilist),
 ]
